@@ -29,7 +29,7 @@ public class IncomingEventService {
     @Transactional
     public <T> IncomingEvent<T> createEvent(String request, UUID traceId, UUID requestId, String source, String eventType, Class<T> payloadType) {
         var incomingEventEntity = new IncomingEventEntity(
-            null,
+            UUID.randomUUID(),
             traceId,
             requestId,
             EventStatusEnum.SUCCESS,

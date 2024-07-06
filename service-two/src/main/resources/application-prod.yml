@@ -11,7 +11,7 @@ spring:
     defer-datasource-initialization: false
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/service_one_db
+    url: jdbc:postgresql://postgres:5432/service_two_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

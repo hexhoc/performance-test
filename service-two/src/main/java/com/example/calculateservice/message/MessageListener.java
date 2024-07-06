@@ -24,7 +24,7 @@ public class MessageListener {
         topics = {KafkaConfig.SERVICE_ONE_TOPIC},
         groupId = "serviceTwoGroup"
     )
-    public void orderEventListener(
+    public void eventListener(
         String messagePayloadJson,
         @Header("requestId") String requestId,
         @Header("traceId") String traceId,

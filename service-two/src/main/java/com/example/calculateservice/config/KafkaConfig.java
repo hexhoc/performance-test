@@ -54,8 +54,8 @@ public class KafkaConfig {
     // When we inject a NewTopic bean, we’re instructing the Kafka’s AdminClient bean (already in the context)
     // to create a topic with the given configuration
     @Bean
-    public NewTopic serviceOneTopic() {
-        return TopicBuilder.name(SERVICE_ONE_TOPIC).partitions(1).replicas(1).build();
+    public NewTopic serviceTopic() {
+        return TopicBuilder.name(SERVICE_TWO_TOPIC).partitions(1).replicas(1).build();
     }
 
 }

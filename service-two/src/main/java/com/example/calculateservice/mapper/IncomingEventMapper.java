@@ -3,6 +3,7 @@ package com.example.calculateservice.mapper;
 import com.example.calculateservice.entity.IncomingEventEntity;
 import com.example.calculateservice.model.IncomingEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,9 @@ public class IncomingEventMapper {
         model.setRequestId(entity.getRequestId());
         model.setTraceId(entity.getTraceId());
         model.setSource(entity.getSource());
-        model.setPayload(objectMapper.readValue(entity.getPayload(), payloadType));
+        if (Objects.nonNull(entity.getPayload())) {
+            model.setPayload(objectMapper.readValue(entity.getPayload(), payloadType));
+        }
         model.setEventType(entity.getEventType());
 
         return model;
@@ -34,7 +37,11 @@ public class IncomingEventMapper {
         entity.setRequestId(model.getRequestId());
         entity.setTraceId(model.getTraceId());
         entity.setSource(model.getSource());
-        entity.setPayload(objectMapper.writeValueAsString(model.getPayload()));
+        if (Objects.nonNull(model.getPayload())) {
+            entity.setPayload(objectMapper.writeValueAsString(model.getPayload()));
+        } else {
+            entity.setPayload(null);
+        }
         entity.setEventType(model.getEventType());
 
         return entity;

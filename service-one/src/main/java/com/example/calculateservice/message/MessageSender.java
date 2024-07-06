@@ -2,7 +2,6 @@ package com.example.calculateservice.message;
 
 
 import com.example.calculateservice.entity.OutgoingEventEntity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +20,10 @@ import org.springframework.stereotype.Component;
 public class MessageSender {
 
   private final KafkaTemplate<String, String> kafkaTemplate;
-  private final ObjectMapper objectMapper;
-    
+      
   public void send(OutgoingEventEntity outgoingEvent, String topicName) {
     try {
-      // avoid too much magic and transform ourselves
-      String jsonMessage = objectMapper.writeValueAsString(outgoingEvent);
-
-      // wrap into a proper message for Kafka including a header
-      ProducerRecord<String, String> record = new ProducerRecord<String, String>(topicName, jsonMessage);
+      ProducerRecord<String, String> record = new ProducerRecord<String, String>(topicName, outgoingEvent.getPayload());
       record.headers().add("requestId", outgoingEvent.getRequestId().toString().getBytes());
       record.headers().add("traceId", outgoingEvent.getTraceId().toString().getBytes());
       record.headers().add("from", outgoingEvent.getDestination().getBytes());
