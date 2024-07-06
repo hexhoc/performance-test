@@ -16,32 +16,23 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CalculationHandler {
+public class StepOneCommandHandler {
 
     private final IncomingEventService incomingEventService;
     private final OutgoingEventService outgoingEventService;
     private final CalculationService calculationService;
-    private final MessageSender messageSender;
     private final ObjectMapper objectMapper;
 
     public void handle() {
         log.info("Handle command: calculate");
-
-        // TODO: Check. transaction should work if exception has appear
-        var incomingEvent = incomingEventService.createEvent(null, EventTypeEnum.STEP_ONE, SourceEnum.HTTP);
+        var incomingEvent = incomingEventService.createEvent(null, EventTypeEnum.STEP_ONE, SourceEnum.HTTP, Object.class);
         try {
-            var calculationResponse = calculationService.makeCalculation();
+            var calculationDto = calculationService.findAny();
             incomingEventService.saveWithSuccess(incomingEvent);
-            var outgoingEvent = outgoingEventService.createAndSaveEvent(incomingEvent, objectMapper.writeValueAsString(calculationResponse));
-            sendMessage(outgoingEvent);
+            outgoingEventService.createAndSend(incomingEvent, objectMapper.writeValueAsString(calculationDto), KafkaConfig.SERVICE_ONE_TOPIC);
         } catch (Exception e) {
             log.error(e.getMessage());
             incomingEventService.saveWithError(incomingEvent);
         }
-
-    }
-
-    private void sendMessage(OutgoingEventEntity outgoingEvent) {
-        messageSender.send(outgoingEvent, KafkaConfig.SERVICE_ONE_TOPIC);
     }
 }

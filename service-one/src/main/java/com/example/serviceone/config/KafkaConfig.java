@@ -19,6 +19,7 @@ import org.springframework.kafka.core.ProducerFactory;
 public class KafkaConfig {
 
     public static final String SERVICE_ONE_TOPIC = "service.one.topic";
+    public static final String SERVICE_TWO_TOPIC = "service.two.topic";
 
     private final KafkaProperties kafkaProperties; // Autowired. Get data from application.yaml (prefix = "spring.kafka")
 

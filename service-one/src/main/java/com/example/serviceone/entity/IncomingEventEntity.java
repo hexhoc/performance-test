@@ -55,8 +55,8 @@ public class IncomingEventEntity {
     private String eventType;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "request", columnDefinition = "jsonb")
-    private String request; // Assuming the request is a JSON String
+    @Column(name = "payload", columnDefinition = "jsonb")
+    private String payload; // Assuming the request is a JSON String
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

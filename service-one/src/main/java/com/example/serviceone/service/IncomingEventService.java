@@ -4,6 +4,8 @@ import com.example.serviceone.constant.EventStatusEnum;
 import com.example.serviceone.constant.EventTypeEnum;
 import com.example.serviceone.constant.SourceEnum;
 import com.example.serviceone.entity.IncomingEventEntity;
+import com.example.serviceone.mapper.IncomingEventMapper;
+import com.example.serviceone.model.IncomingEvent;
 import com.example.serviceone.repository.IncomingEventRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class IncomingEventService {
     private final IncomingEventRepository incomingEventRepository;
+    private final IncomingEventMapper incomingEventMapper;
 
     public Boolean alreadyExist(UUID correlationId) {
         log.info("Trying to find an existing event");
@@ -24,8 +27,8 @@ public class IncomingEventService {
     }
 
     @Transactional
-    public void createEvent(String request, UUID traceId, UUID requestId, String source, String eventType) {
-        var incomingEvent = new IncomingEventEntity(
+    public <T> IncomingEvent<T> createEvent(String request, UUID traceId, UUID requestId, String source, String eventType, Class<T> payloadType) {
+        var incomingEventEntity = new IncomingEventEntity(
             null,
             traceId,
             requestId,
@@ -35,12 +38,13 @@ public class IncomingEventService {
             request,
             LocalDateTime.now());
 
-        incomingEventRepository.save(incomingEvent);
+        return incomingEventMapper.toModel(incomingEventEntity, payloadType);
+
     }
 
     @Transactional
-    public IncomingEventEntity createEvent(String request, EventTypeEnum eventType, SourceEnum source) {
-        return new IncomingEventEntity(
+    public <T> IncomingEvent<T> createEvent(String request, EventTypeEnum eventType, SourceEnum source, Class<T> payloadType) {
+        var incomingEventEntity = new IncomingEventEntity(
             UUID.randomUUID(),
             UUID.randomUUID(),
             UUID.randomUUID(),
@@ -49,17 +53,21 @@ public class IncomingEventService {
             eventType.name(),
             request,
             LocalDateTime.now());
+
+        return incomingEventMapper.toModel(incomingEventEntity, payloadType);
     }
 
     @Transactional
-    public void saveWithSuccess(IncomingEventEntity incomingEvent) {
+    public void saveWithSuccess(IncomingEvent<?> incomingEvent) {
         incomingEvent.setStatus(EventStatusEnum.SUCCESS);
-        incomingEventRepository.save(incomingEvent);
+        var entity = incomingEventMapper.toEntity(incomingEvent);
+        incomingEventRepository.save(entity);
     }
 
     @Transactional
-    public void saveWithError(IncomingEventEntity incomingEvent) {
+    public void saveWithError(IncomingEvent<?> incomingEvent) {
         incomingEvent.setStatus(EventStatusEnum.FAILED);
-        incomingEventRepository.save(incomingEvent);
+        var entity = incomingEventMapper.toEntity(incomingEvent);
+        incomingEventRepository.save(entity);
     }
 }

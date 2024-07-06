@@ -1,7 +1,8 @@
 package com.example.serviceone.service;
 
-import com.example.serviceone.dto.CalculateResponse;
+import com.example.serviceone.dto.CalculationDto;
 import com.example.serviceone.entity.CalculationEntity;
+import com.example.serviceone.mapper.CalculationMapper;
 import com.example.serviceone.repository.CalculationRepository;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
@@ -15,22 +16,31 @@ import org.springframework.stereotype.Service;
 public class CalculationService {
 
     private final CalculationRepository calculationRepository;
+    private final CalculationMapper calculationMapper;
     private final Random random = new Random();
 
     @Transactional
-    public CalculateResponse makeCalculation() {
+    public CalculationDto findAny() {
         var count = calculationRepository.count();
         var randomId = Long.valueOf(random.nextInt((int) (count + 1)));
         var calculationOpt = calculationRepository.findById((randomId));
-        var calculation = calculationOpt.orElseThrow(() -> new ObjectNotFoundException(randomId, CalculationEntity.class.getName()));
+        var calculationEntity = calculationOpt.orElseThrow(() -> new ObjectNotFoundException(randomId, CalculationEntity.class.getName()));
+        return calculationMapper.toDto(calculationEntity);
+    }
 
-        calculation.setValue(calculation.getValue().add(new BigDecimal(1)));
-        calculation = calculationRepository.save(calculation);
+    @Transactional
+    public CalculationDto increaseValue(Long id) {
+        var calculationOpt = calculationRepository.findById(id);
+        var calculationEntity = calculationOpt.orElseThrow(() -> new ObjectNotFoundException(id, CalculationEntity.class.getName()));
 
-        return new CalculateResponse(
-            calculation.getId(),
-            calculation.getName(),
-            calculation.getDescription(),
-            calculation.getValue());
+        calculationEntity.setValue(calculationEntity.getValue().add(new BigDecimal(1)));
+        calculationEntity = calculationRepository.save(calculationEntity);
+
+        return calculationMapper.toDto(calculationEntity);
+    }
+
+    public void update(CalculationDto payload) {
+        var entity = calculationMapper.toEntity(payload);
+        calculationRepository.save(entity);
     }
 }

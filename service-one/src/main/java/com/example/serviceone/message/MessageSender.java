@@ -23,14 +23,17 @@ public class MessageSender {
   private final KafkaTemplate<String, String> kafkaTemplate;
   private final ObjectMapper objectMapper;
     
-  public void send(OutgoingEventEntity m, String topicName) {
+  public void send(OutgoingEventEntity outgoingEvent, String topicName) {
     try {
       // avoid too much magic and transform ourselves
-      String jsonMessage = objectMapper.writeValueAsString(m);
-      
+      String jsonMessage = objectMapper.writeValueAsString(outgoingEvent);
+
       // wrap into a proper message for Kafka including a header
       ProducerRecord<String, String> record = new ProducerRecord<String, String>(topicName, jsonMessage);
-      record.headers().add("type", m.getEventType().getBytes());
+      record.headers().add("requestId", outgoingEvent.getRequestId().toString().getBytes());
+      record.headers().add("traceId", outgoingEvent.getTraceId().toString().getBytes());
+      record.headers().add("from", outgoingEvent.getDestination().getBytes());
+      record.headers().add("eventType", outgoingEvent.getEventType().getBytes());
 
       // and send it
       CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record);
