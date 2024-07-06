@@ -22,7 +22,7 @@ public class OutgoingEventService {
         return outgoingEventRepository.existsById(correlationId);
     }
 
-    public OutgoingEventEntity createEvent(IncomingEventEntity incomingEvent, String response) {
+    public OutgoingEventEntity createAndSaveEvent(IncomingEventEntity incomingEvent, String response) {
         var outgoingEvent = new OutgoingEventEntity(
             UUID.randomUUID(),
             incomingEvent.getId(),

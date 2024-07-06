@@ -51,7 +51,7 @@ public class OutgoingEventEntity {
     private String eventType;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "response", nullable = false, columnDefinition = "jsonb")
+    @Column(name = "response", nullable = true, columnDefinition = "jsonb")
     private String response; // Assuming the response is a JSON String
 
     @CreationTimestamp

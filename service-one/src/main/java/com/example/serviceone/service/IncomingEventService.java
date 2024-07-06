@@ -10,6 +10,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class IncomingEventService {
         return incomingEventRepository.existsById(correlationId);
     }
 
+    @Transactional
     public void createEvent(String request, UUID traceId, UUID requestId, String source, String eventType) {
         var incomingEvent = new IncomingEventEntity(
             null,
@@ -36,8 +38,9 @@ public class IncomingEventService {
         incomingEventRepository.save(incomingEvent);
     }
 
+    @Transactional
     public IncomingEventEntity createEvent(String request, EventTypeEnum eventType, SourceEnum source) {
-        var incomingEvent = new IncomingEventEntity(
+        return new IncomingEventEntity(
             UUID.randomUUID(),
             UUID.randomUUID(),
             UUID.randomUUID(),
@@ -46,7 +49,17 @@ public class IncomingEventService {
             eventType.name(),
             request,
             LocalDateTime.now());
+    }
 
-        return incomingEventRepository.save(incomingEvent);
+    @Transactional
+    public void saveWithSuccess(IncomingEventEntity incomingEvent) {
+        incomingEvent.setStatus(EventStatusEnum.SUCCESS);
+        incomingEventRepository.save(incomingEvent);
+    }
+
+    @Transactional
+    public void saveWithError(IncomingEventEntity incomingEvent) {
+        incomingEvent.setStatus(EventStatusEnum.FAILED);
+        incomingEventRepository.save(incomingEvent);
     }
 }

@@ -4,6 +4,8 @@ import com.example.serviceone.constant.EventStatusEnum;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -43,6 +45,7 @@ public class IncomingEventEntity {
     private UUID traceId;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private EventStatusEnum status;
 
     @Column(name = "source", nullable = false, length = 50)
@@ -52,7 +55,7 @@ public class IncomingEventEntity {
     private String eventType;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "request", nullable = false, columnDefinition = "jsonb")
+    @Column(name = "request", columnDefinition = "jsonb")
     private String request; // Assuming the request is a JSON String
 
     @CreationTimestamp

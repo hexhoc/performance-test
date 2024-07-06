@@ -8,6 +8,8 @@ spring:
 #    properties:
 #      hibernate:
 #        format_sql: true
+    defer-datasource-initialization: false
+
   datasource:
     url: jdbc:postgresql://postgres:5432/service_one_db
     username: postgres

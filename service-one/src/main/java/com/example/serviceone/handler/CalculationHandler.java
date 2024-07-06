@@ -1,7 +1,6 @@
 package com.example.serviceone.handler;
 
 import com.example.serviceone.config.KafkaConfig;
-import com.example.serviceone.constant.EventStatusEnum;
 import com.example.serviceone.constant.EventTypeEnum;
 import com.example.serviceone.constant.SourceEnum;
 import com.example.serviceone.entity.OutgoingEventEntity;
@@ -13,32 +12,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class CalculationHandler {
+
     private final IncomingEventService incomingEventService;
     private final OutgoingEventService outgoingEventService;
     private final CalculationService calculationService;
     private final MessageSender messageSender;
     private final ObjectMapper objectMapper;
 
-    @Transactional(noRollbackFor = Exception.class)
     public void handle() {
         log.info("Handle command: calculate");
 
         // TODO: Check. transaction should work if exception has appear
-        var incomingEvent = incomingEventService.createEvent("", EventTypeEnum.STEP_ONE, SourceEnum.HTTP);
+        var incomingEvent = incomingEventService.createEvent(null, EventTypeEnum.STEP_ONE, SourceEnum.HTTP);
         try {
             var calculationResponse = calculationService.makeCalculation();
-            var outgoingEvent = outgoingEventService.createEvent(incomingEvent, objectMapper.writeValueAsString(calculationResponse));
-//            sendMessage(outgoingEvent);
+            incomingEventService.saveWithSuccess(incomingEvent);
+            var outgoingEvent = outgoingEventService.createAndSaveEvent(incomingEvent, objectMapper.writeValueAsString(calculationResponse));
+            sendMessage(outgoingEvent);
         } catch (Exception e) {
             log.error(e.getMessage());
-            incomingEvent.setStatus(EventStatusEnum.FAILED);
+            incomingEventService.saveWithError(incomingEvent);
         }
+
     }
 
     private void sendMessage(OutgoingEventEntity outgoingEvent) {
