@@ -2,6 +2,7 @@
 
 ## Description
 This project is designed to demonstrate a simple example of a highload performance test within a microservice architecture.
+All microservices based on spring boot 3 with event driven interaction based on kafka
 
 ## Purpose:
 This project explores the concept of handling high-volume data and processing within a microservice architecture. It consists of three interconnected services, each responsible for a specific step in a data processing pipeline.

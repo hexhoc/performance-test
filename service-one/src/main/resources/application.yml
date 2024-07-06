@@ -1,12 +1,14 @@
 spring:
-    application:
+  application:
       name: service-one
-    profiles:
-        active: dev
-    kafka:
-        consumer: 
-            auto-offset-reset: earliest
-        bootstrap-servers: localhost:9092
+  profiles:
+      active: dev
+  kafka:
+      consumer:
+        auto-offset-reset: earliest
+      bootstrap-servers: localhost:9092
+  jpa:
+    defer-datasource-initialization: true
 
 server:
   port: 8080

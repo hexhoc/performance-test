@@ -1,10 +1,7 @@
 package com.example.serviceone.service;
 
-import com.example.serviceone.config.KafkaConfig;
 import com.example.serviceone.dto.CalculateResponse;
 import com.example.serviceone.entity.CalculationEntity;
-import com.example.serviceone.message.Message;
-import com.example.serviceone.message.MessageSender;
 import com.example.serviceone.repository.CalculationRepository;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;

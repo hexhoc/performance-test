@@ -4,7 +4,6 @@ import com.example.serviceone.constant.EventStatusEnum;
 import com.example.serviceone.constant.EventTypeEnum;
 import com.example.serviceone.constant.SourceEnum;
 import com.example.serviceone.entity.IncomingEventEntity;
-import com.example.serviceone.message.Message;
 import com.example.serviceone.repository.IncomingEventRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -4,7 +4,6 @@ import com.example.serviceone.config.KafkaConfig;
 import com.example.serviceone.constant.EventTypeEnum;
 import com.example.serviceone.entity.IncomingEventEntity;
 import com.example.serviceone.entity.OutgoingEventEntity;
-import com.example.serviceone.message.Message;
 import com.example.serviceone.repository.OutgoingEventRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
