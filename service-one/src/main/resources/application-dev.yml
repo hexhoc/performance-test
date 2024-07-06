@@ -1,0 +1,15 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+  jpa:
+#    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+#    properties:
+#      hibernate:
+#        format_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/service_one_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
