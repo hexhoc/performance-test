@@ -3,8 +3,8 @@ package com.example.serviceone.handler;
 import com.example.serviceone.config.KafkaConfig;
 import com.example.serviceone.constant.EventTypeEnum;
 import com.example.serviceone.dto.CalculationDto;
-import com.example.serviceone.message.MessageSender;
 import com.example.serviceone.message.event.StepOneEndEvent;
+import com.example.serviceone.message.event.StepTwoEndEvent;
 import com.example.serviceone.service.CalculationService;
 import com.example.serviceone.service.IncomingEventService;
 import com.example.serviceone.service.OutgoingEventService;
@@ -17,26 +17,26 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class StepOneEndEventHandler {
+public class StepTwoEndEventHandler {
     private final IncomingEventService incomingEventService;
     private final OutgoingEventService outgoingEventService;
     private final CalculationService calculationService;
     private final ObjectMapper objectMapper;
 
     @EventListener
-    public void handle(StepOneEndEvent stepOneEndEvent) {
-        log.info("Handle event: {}", stepOneEndEvent.getClass());
+    public void handle(StepTwoEndEvent stepTwoEndEvent) {
+        log.info("Handle event: {}", stepTwoEndEvent.getClass());
         var incomingEvent = incomingEventService.createEvent(
-            stepOneEndEvent.getPayload(),
-            stepOneEndEvent.getTraceId(),
-            stepOneEndEvent.getRequestId(),
-            stepOneEndEvent.getFrom(),
-            stepOneEndEvent.getEventType(),
+            stepTwoEndEvent.getPayload(),
+            stepTwoEndEvent.getTraceId(),
+            stepTwoEndEvent.getRequestId(),
+            stepTwoEndEvent.getFrom(),
+            stepTwoEndEvent.getEventType(),
             CalculationDto.class);
         try {
             calculationService.update(incomingEvent.getPayload());
             incomingEventService.saveWithSuccess(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_TWO, objectMapper.writeValueAsString(incomingEvent.getPayload()), KafkaConfig.SERVICE_ONE_TOPIC);
+            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_THREE, objectMapper.writeValueAsString(incomingEvent.getPayload()), KafkaConfig.SERVICE_ONE_TOPIC);
         } catch (Exception e) {
             log.error(e.getMessage());
             incomingEventService.saveWithError(incomingEvent);

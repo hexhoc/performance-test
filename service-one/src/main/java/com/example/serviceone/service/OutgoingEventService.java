@@ -26,14 +26,14 @@ public class OutgoingEventService {
     }
 
     @Transactional
-    public void createAndSend(IncomingEvent<?> incomingEvent, String response, String topic) {
+    public void createAndSend(IncomingEvent<?> incomingEvent, EventTypeEnum eventType, String response, String topic) {
         var outgoingEventEntity = new OutgoingEventEntity(
             UUID.randomUUID(),
             incomingEvent.getId(),
             incomingEvent.getTraceId(),
             incomingEvent.getRequestId(),
-            KafkaConfig.SERVICE_ONE_TOPIC,
-            EventTypeEnum.STEP_ONE.name(),
+            topic,
+            eventType.name(),
             response,
             LocalDateTime.now());
 
