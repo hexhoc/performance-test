@@ -36,7 +36,7 @@ public class MessageSender {
             if (error != null) {
               log.error("Unable to deliver message [{}]. {}", res, error.getMessage());
             } else if (res != null) {
-              log.info("Message [{}] delivered with offset {}", res, res.getRecordMetadata().offset());
+              // log.info("Message [{}] delivered with offset {}", res, res.getRecordMetadata().offset());
             }
           });
     } catch (Exception e) {

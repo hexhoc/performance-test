@@ -35,7 +35,7 @@ public class HighloadDbSimulation extends Simulation {
 
     // FEEDER FOR TESTTING
     Iterator<Map<String, Object>> feeder = Stream.generate((Supplier<Map<String, Object>>) () -> {
-        var id = Long.valueOf(random.nextInt((int) (100 + 1)));
+        var id = random.nextInt(100) + 1;
         return Map.of("id", id);
     }).iterator();
 
