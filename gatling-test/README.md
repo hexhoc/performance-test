@@ -3,28 +3,22 @@
 The Gatling Bundle gives you a quick start to your Gatling journey.
 It is based on the [Gatling Maven Plugin demo, in Java](https://github.com/gatling/gatling-maven-plugin-demo-java).
 
-## Run a test locally
+## Run current test locally
 
-On Linux / MacOS:
 ```console
-./mvnw gatling:test
+mvn gatling:test -Dgatling.simulationClass=kafkahighload.HighloadDbSimulation -DUSERS=10 -DRAMP_DURATION=20
 ```
 
-On Windows:
+## Run a test locally
+
 ```console
-mvnw.cmd gatling:test
+mvn gatling:test
 ```
 
 ## Run the Gatling Recorder
 
-On Linux / MacOS:
 ```console
-./mvnw gatling:recorder
-```
-
-On Windows:
-```console
-mvnw.cmd gatling:recorder
+mvn gatling:recorder
 ```
 
 ## To go further
