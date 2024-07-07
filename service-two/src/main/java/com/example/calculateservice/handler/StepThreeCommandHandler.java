@@ -33,7 +33,7 @@ public class StepThreeCommandHandler {
             stepThreeCommand.getEventType(),
             CalculationDto.class);
         try {
-            var calculationDto = calculationService.increaseValue2(incomingEvent.getPayload().getId());
+            var calculationDto = calculationService.increaseValue3(incomingEvent.getPayload().getId());
             incomingEventService.saveWithSuccess(incomingEvent);
             outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_THREE_END, objectMapper.writeValueAsString(calculationDto), KafkaConfig.SERVICE_TWO_TOPIC);
         } catch (Exception e) {

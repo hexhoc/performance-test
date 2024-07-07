@@ -50,7 +50,7 @@ public class CalculationService {
     @Transactional
     public CalculationDto increaseValue2(Long id) {
         var calculationEntity = findByIdOrElseThrow(id);
-        calculationEntity.setValue1(calculationEntity.getValue2().add(new BigDecimal(1)));
+        calculationEntity.setValue2(calculationEntity.getValue2().add(new BigDecimal(1)));
         calculationEntity = calculationRepository.save(calculationEntity);
 
         return calculationMapper.toDto(calculationEntity);
@@ -59,7 +59,7 @@ public class CalculationService {
     @Transactional
     public CalculationDto increaseValue3(Long id) {
         var calculationEntity = findByIdOrElseThrow(id);
-        calculationEntity.setValue1(calculationEntity.getValue3().add(new BigDecimal(1)));
+        calculationEntity.setValue3(calculationEntity.getValue3().add(new BigDecimal(1)));
         calculationEntity = calculationRepository.save(calculationEntity);
 
         return calculationMapper.toDto(calculationEntity);
