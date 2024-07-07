@@ -1,7 +1,6 @@
 package com.example.calculateservice.message.event;
 
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 

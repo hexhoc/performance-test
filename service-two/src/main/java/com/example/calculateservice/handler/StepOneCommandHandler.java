@@ -33,7 +33,7 @@ public class StepOneCommandHandler {
             stepOneCommand.getEventType(),
             CalculationDto.class);
         try {
-            var calculationDto = calculationService.increaseValue(incomingEvent.getPayload().getId());
+            var calculationDto = calculationService.increaseValue1(incomingEvent.getPayload().getId());
             incomingEventService.saveWithSuccess(incomingEvent);
             outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE_END, objectMapper.writeValueAsString(calculationDto), KafkaConfig.SERVICE_TWO_TOPIC);
         } catch (Exception e) {

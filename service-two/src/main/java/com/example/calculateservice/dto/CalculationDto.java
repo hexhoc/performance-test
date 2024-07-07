@@ -14,5 +14,7 @@ public class CalculationDto {
     private Long id;
     private String name;
     private String description;
-    private BigDecimal value;
+    private BigDecimal value1;
+    private BigDecimal value2;
+    private BigDecimal value3;
 }

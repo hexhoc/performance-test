@@ -30,6 +30,12 @@ public class CalculationEntity {
     @Column(name  = "description")
     private String description;
 
-    @Column(name   = "value")
-    private BigDecimal value;
+    @Column(name   = "value_1")
+    private BigDecimal value1;
+    
+    @Column(name   = "value_2")
+    private BigDecimal value2;
+
+    @Column(name   = "value_3")
+    private BigDecimal value3;
 }

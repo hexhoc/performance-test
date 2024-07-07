@@ -16,8 +16,11 @@ public class CalculationMapper {
             entity.getId(),
             entity.getName(),
             entity.getDescription(),
-            entity.getValue());
-
+            entity.getValue1(),
+            entity.getValue2(),
+            entity.getValue3()
+            );
+            
     }
 
     @SneakyThrows
@@ -26,6 +29,9 @@ public class CalculationMapper {
             dto.getId(),
             dto.getName(),
             dto.getDescription(),
-            dto.getValue());
+            dto.getValue1(),
+            dto.getValue2(),
+            dto.getValue3()
+            );
     }
 }
