@@ -6,7 +6,6 @@ import com.example.calculateservice.mapper.CalculationMapper;
 import com.example.calculateservice.repository.CalculationRepository;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,6 @@ public class CalculationService {
 
     private final CalculationRepository calculationRepository;
     private final CalculationMapper calculationMapper;
-    private final Random random = new Random();
-
-    @Transactional
-    public CalculationDto findById(Long id) {
-        return calculationMapper.toDto(findByIdOrElseThrow(id));
-    }
 
     private CalculationEntity findByIdOrElseThrow(long id) {
         return calculationRepository.findById(id)
@@ -30,43 +23,37 @@ public class CalculationService {
     }
 
     @Transactional
-    public CalculationDto findAny() {
-        var count = calculationRepository.count();
-        var randomId = Long.valueOf(random.nextInt((int) (count + 1)));
-        var calculationOpt = calculationRepository.findById((randomId));
-        var calculationEntity = calculationOpt.orElseThrow(() -> new ObjectNotFoundException(randomId, CalculationEntity.class.getName()));
-        return calculationMapper.toDto(calculationEntity);
+    public void createIfNotExist(long id) {
+        var calculationOpt = calculationRepository.findById(id);
+        if (calculationOpt.isEmpty())
+            create(id);
     }
 
     @Transactional
-    public CalculationDto increaseValue1(Long id) {
+    public CalculationDto calculateValue(Long id, int valueNum) {
         var calculationEntity = findByIdOrElseThrow(id);
-        calculationEntity.setValue1(calculationEntity.getValue1().add(new BigDecimal(1)));
         calculationEntity = calculationRepository.save(calculationEntity);
+
+        switch (valueNum) {
+            case 1 -> calculationEntity.setValue1(calculationEntity.getValue1().add(new BigDecimal(1)));
+            case 2 -> calculationEntity.setValue2(calculationEntity.getValue2().add(new BigDecimal(1)));
+            case 3 -> calculationEntity.setValue3(calculationEntity.getValue3().add(new BigDecimal(1)));
+            default -> throw new IllegalStateException("Unexpected value: " + valueNum);
+        }
 
         return calculationMapper.toDto(calculationEntity);
     }
 
-    @Transactional
-    public CalculationDto increaseValue2(Long id) {
-        var calculationEntity = findByIdOrElseThrow(id);
-        calculationEntity.setValue2(calculationEntity.getValue2().add(new BigDecimal(1)));
-        calculationEntity = calculationRepository.save(calculationEntity);
+    public CalculationDto create(Long id) {
+        CalculationEntity entity = new CalculationEntity();
+        entity.setId(id);
+        entity.setName("Example name");
+        entity.setDescription("Example description");
+        entity.setValue1(BigDecimal.ZERO);
+        entity.setValue2(BigDecimal.ZERO);
+        entity.setValue3(BigDecimal.ZERO);
 
-        return calculationMapper.toDto(calculationEntity);
-    }
-
-    @Transactional
-    public CalculationDto increaseValue3(Long id) {
-        var calculationEntity = findByIdOrElseThrow(id);
-        calculationEntity.setValue3(calculationEntity.getValue3().add(new BigDecimal(1)));
-        calculationEntity = calculationRepository.save(calculationEntity);
-
-        return calculationMapper.toDto(calculationEntity);
-    }
-
-    public void update(CalculationDto payload) {
-        var entity = calculationMapper.toEntity(payload);
-        calculationRepository.save(entity);
+        entity = calculationRepository.save(entity);
+        return calculationMapper.toDto(entity);
     }
 }

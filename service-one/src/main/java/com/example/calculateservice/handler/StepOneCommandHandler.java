@@ -26,10 +26,11 @@ public class StepOneCommandHandler {
         log.info("Handle command: calculate");
         var incomingEvent = incomingEventService.createEvent(null, EventTypeEnum.STEP_ONE, SourceEnum.HTTP, Object.class);
         try {
-            var calculationDto = calculationService.findById(id);
+            var calculationDto = calculationService.findById(id)
+                .orElseGet(() -> calculationService.create(id));
             incomingEventService.saveWithSuccess(incomingEvent);
             outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE, objectMapper.writeValueAsString(calculationDto), KafkaConfig.SERVICE_ONE_TOPIC);
-        
+
             return calculationDto;
         } catch (Exception e) {
             incomingEventService.saveWithError(incomingEvent);

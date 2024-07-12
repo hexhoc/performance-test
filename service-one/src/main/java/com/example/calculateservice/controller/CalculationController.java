@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CalculationController {
     private final StepOneCommandHandler stepOneCommandHandler;
 
-    @GetMapping("/increment")
+    @GetMapping("/calculate")
     public ResponseEntity<CalculationDto> getCalculate(@RequestParam("id") Long id){
         var calculationDto = stepOneCommandHandler.handle(id);
         return ResponseEntity.ok(calculationDto);

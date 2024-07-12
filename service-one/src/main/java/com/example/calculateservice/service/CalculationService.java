@@ -5,6 +5,8 @@ import com.example.calculateservice.entity.CalculationEntity;
 import com.example.calculateservice.mapper.CalculationMapper;
 import com.example.calculateservice.repository.CalculationRepository;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
@@ -16,25 +18,23 @@ public class CalculationService {
 
     private final CalculationRepository calculationRepository;
     private final CalculationMapper calculationMapper;
-    private final Random random = new Random();
 
     @Transactional
-    public CalculationDto findById(Long id) {
-        return calculationMapper.toDto(findByIdOrElseThrow(id));
+    public Optional<CalculationDto> findById(Long id) {
+        return calculationRepository.findById(id).map(calculationMapper::toDto);
     }
 
-    private CalculationEntity findByIdOrElseThrow(long id) {
-        return calculationRepository.findById(id)
-            .orElseThrow(() -> new ObjectNotFoundException(id, CalculationEntity.class.getName()));
-    }
+    public CalculationDto create(Long id) {
+        CalculationEntity entity = new CalculationEntity();
+        entity.setId(id);
+        entity.setName("Example name");
+        entity.setDescription("Example description");
+        entity.setValue1(BigDecimal.ZERO);
+        entity.setValue2(BigDecimal.ZERO);
+        entity.setValue3(BigDecimal.ZERO);
 
-    @Transactional
-    public CalculationDto findAny() {
-        var count = calculationRepository.count();
-        var randomId = Long.valueOf(random.nextInt((int) (count + 1)));
-        var calculationOpt = calculationRepository.findById((randomId));
-        var calculationEntity = calculationOpt.orElseThrow(() -> new ObjectNotFoundException(randomId, CalculationEntity.class.getName()));
-        return calculationMapper.toDto(calculationEntity);
+        entity = calculationRepository.save(entity);
+        return calculationMapper.toDto(entity);
     }
 
     public void update(CalculationDto payload) {
