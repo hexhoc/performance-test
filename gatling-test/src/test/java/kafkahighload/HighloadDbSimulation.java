@@ -42,7 +42,7 @@ public class HighloadDbSimulation extends Simulation {
     ScenarioBuilder calculations = scenario("Highload kafka test")
             .feed(feeder)
             .exec(http("GET request to /api/v1/calculate")
-                    .get("/api/v1/calculation")
+                    .get("/api/v1/calculate")
                     .queryParam("id", "#{id}"));
 
     {

@@ -23,7 +23,10 @@ public class MessageSender {
       
   public void send(OutgoingEventEntity outgoingEvent, String topicName) {
     try {
-      ProducerRecord<String, String> record = new ProducerRecord<String, String>(topicName, outgoingEvent.getPayload());
+      ProducerRecord<String, String> record = new ProducerRecord<String, String>(
+          topicName,
+          outgoingEvent.getRequestId().toString(),
+          outgoingEvent.getPayload());
       record.headers().add("requestId", outgoingEvent.getRequestId().toString().getBytes());
       record.headers().add("traceId", outgoingEvent.getTraceId().toString().getBytes());
       record.headers().add("from", outgoingEvent.getDestination().getBytes());
@@ -36,7 +39,7 @@ public class MessageSender {
             if (error != null) {
               log.error("Unable to deliver message [{}]. {}", res, error.getMessage());
             } else if (res != null) {
-              // log.info("Message [{}] delivered with offset {}", res, res.getRecordMetadata().offset());
+//               log.info("Message [{}] delivered with offset {}", res, res.getRecordMetadata().offset());
             }
           });
     } catch (Exception e) {

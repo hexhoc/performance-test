@@ -24,7 +24,7 @@ public class StepTwoEndEventHandler {
 
     @EventListener
     public void handle(StepTwoEndEvent stepTwoEndEvent) {
-        log.info("Handle event: {}", stepTwoEndEvent.getClass());
+        log.info("Handle event: STEP 2 END");
         var incomingEvent = incomingEventService.createEvent(
             stepTwoEndEvent.getPayload(),
             stepTwoEndEvent.getTraceId(),

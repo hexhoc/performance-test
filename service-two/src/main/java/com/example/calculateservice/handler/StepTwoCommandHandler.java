@@ -24,7 +24,7 @@ public class StepTwoCommandHandler {
 
     @EventListener
     public void handle(StepTwoCommand stepTwoCommand) {
-        log.info("Handle event: {}", stepTwoCommand.getClass());
+        log.info("Handle event: STEP 2 START");
         var incomingEvent = incomingEventService.createEvent(
             stepTwoCommand.getPayload(),
             stepTwoCommand.getTraceId(),

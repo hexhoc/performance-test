@@ -24,7 +24,7 @@ public class StepThreeCommandHandler {
 
     @EventListener
     public void handle(StepThreeCommand stepThreeCommand) {
-        log.info("Handle event: {}", stepThreeCommand.getClass());
+        log.info("Handle event: STEP 3 START");
         var incomingEvent = incomingEventService.createEvent(
             stepThreeCommand.getPayload(),
             stepThreeCommand.getTraceId(),

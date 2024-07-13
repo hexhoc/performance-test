@@ -38,5 +38,5 @@ public class CalculationEntity {
 
     @Column(name   = "value_3")
     private BigDecimal value3;
-    
+
 }

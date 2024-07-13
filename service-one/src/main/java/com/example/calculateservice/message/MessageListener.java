@@ -33,7 +33,6 @@ public class MessageListener {
         @Header("traceId") String traceId,
         @Header("from") String from,
         @Header("eventType") String eventType) {
-        log.info(eventType);
 
         if (STEP_ONE_END.name().equals(eventType)) {
             applicationEventPublisher.publishEvent(new StepOneEndEvent(this, messagePayloadJson, UUID.fromString(requestId), UUID.fromString(traceId), from, eventType));

@@ -23,8 +23,12 @@ public class StepOneCommandHandler {
     private final ObjectMapper objectMapper;
 
     public CalculationDto handle(Long id) {
-        log.info("Handle command: calculate");
-        var incomingEvent = incomingEventService.createEvent(null, EventTypeEnum.STEP_ONE, SourceEnum.HTTP, Object.class);
+        log.info("Handle event: STEP 1 START");
+        var incomingEvent = incomingEventService.createEvent(
+            "{\"id\":%d}".formatted(id),
+            EventTypeEnum.STEP_ONE,
+            SourceEnum.HTTP,
+            Object.class);
         try {
             var calculationDto = calculationService.findById(id)
                 .orElseGet(() -> calculationService.create(id));
