@@ -18,7 +18,9 @@ This project explores the concept of handling high-volume data and processing wi
 5. Guntling
 6. Jaeger
 
-## Functionality:
+## Algorithm:
+![sequence_diagram.png](./doc/uml/sequence_diagram.png)
+
 This project simulates a three-step process where each service performs a specific task:
 
 - Service-One:
