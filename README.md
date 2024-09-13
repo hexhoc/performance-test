@@ -50,6 +50,34 @@ docker-compose build
 
 Run the services:
 ```
-docker-compose up
+docker-compose up -d
 ```
 Note: This README assumes you are familiar with basic concepts of Kafka and microservices.
+
+
+# Prometheus and grafana
+In this project added prometheus metrics with grafana
+
+Added:
+1. Dependency **spring-boot-starter-actuator**. For prometheus
+2. Dependency **micrometer-registry-prometheus**. For custom prometheus metric
+3. Configuration for actuator:
+```yaml
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+```
+4. Scrape config for prometheus ./docker/config/prometheus/prometheus.yml
+5. @Timed annotation for handlers and controller
+5. For each service, prometheus metrics can be accessed by this url
+   `http://localhost:<service.port>/actuator/prometheus`
+6. Check prometheus http://localhost:9090
+7. Check grafana http://localhost:3000 Username: admin; Password: admin;
+8. Add Prometheus as a data source by navigating to Configuration > Data Sources > Add data source in Grafana’s UI. We select Prometheus as the type and specify the URL where Prometheus is running, usually http://localhost:9090 (or `http://<container_name>:9090`).
+   Save & Test to confirm Grafana can successfully connect to Prometheus.

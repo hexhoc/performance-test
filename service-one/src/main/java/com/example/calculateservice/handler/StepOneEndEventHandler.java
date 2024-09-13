@@ -8,6 +8,7 @@ import com.example.calculateservice.service.CalculationService;
 import com.example.calculateservice.service.IncomingEventService;
 import com.example.calculateservice.service.OutgoingEventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -23,6 +24,7 @@ public class StepOneEndEventHandler {
     private final ObjectMapper objectMapper;
 
     @EventListener
+    @Timed(value = "step.one.end.handler.time")
     public void handle(StepOneEndEvent stepOneEndEvent) {
         log.info("Handle event: STEP 1 END");
         var incomingEvent = incomingEventService.createEvent(

@@ -4,6 +4,7 @@ import com.example.calculateservice.dto.CalculationDto;
 import com.example.calculateservice.message.event.StepThreeEndEvent;
 import com.example.calculateservice.service.CalculationService;
 import com.example.calculateservice.service.IncomingEventService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -17,6 +18,7 @@ public class StepThreeEndEventHandler {
     private final CalculationService calculationService;
 
     @EventListener
+    @Timed(value = "step.three.end.handler.time")
     public void handle(StepThreeEndEvent stepThreeEndEvent) {
         log.info("Handle event: STEP 3 END");
         var incomingEvent = incomingEventService.createEvent(

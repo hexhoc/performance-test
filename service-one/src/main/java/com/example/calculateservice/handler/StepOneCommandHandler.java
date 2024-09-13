@@ -8,6 +8,7 @@ import com.example.calculateservice.service.CalculationService;
 import com.example.calculateservice.service.IncomingEventService;
 import com.example.calculateservice.service.OutgoingEventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class StepOneCommandHandler {
     private final CalculationService calculationService;
     private final ObjectMapper objectMapper;
 
+    @Timed(value = "step.one.start.handler.time")
     public CalculationDto handle(Long id) {
         log.info("Handle event: STEP 1 START");
         var incomingEvent = incomingEventService.createEvent(
