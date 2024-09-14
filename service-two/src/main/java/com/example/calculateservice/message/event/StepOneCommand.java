@@ -10,7 +10,7 @@ public class StepOneCommand extends BaseEvent {
     /**
      * Construct an instance with the provided source and Kafka event.
      */
-    public StepOneCommand(Object source, String payload, UUID requestId, UUID traceId, String from, String eventType) {
+    public StepOneCommand(Object source, String payload, UUID requestId, String traceId, String from, String eventType) {
         super(source, payload, requestId, traceId, from, eventType);
     }
 }

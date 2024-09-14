@@ -34,9 +34,9 @@ public class MessageSender {
       future.whenComplete(
           (res, error) -> {
             if (error != null) {
-              log.error("Unable to deliver message [{}]. {}", res, error.getMessage());
+                log.error("Unable to deliver message [{}]. {}", res, error.getMessage());
             } else if (res != null) {
-              // log.info("Message [{}] delivered with offset {}", res, res.getRecordMetadata().offset());
+                log.info("Sent({}): {}", res.getProducerRecord().key(), res.getProducerRecord().value());
             }
           });
     } catch (Exception e) {

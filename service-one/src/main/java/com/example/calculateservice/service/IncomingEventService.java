@@ -27,11 +27,11 @@ public class IncomingEventService {
     }
 
     @Transactional
-    public <T> IncomingEvent<T> createEvent(String request, UUID traceId, UUID requestId, String source, String eventType, Class<T> payloadType) {
+    public <T> IncomingEvent<T> createEvent(String request, String traceId, UUID requestId, String source, String eventType, Class<T> payloadType) {
         var incomingEventEntity = new IncomingEventEntity(
             UUID.randomUUID(),
-            traceId,
             requestId,
+            traceId,
             EventStatusEnum.SUCCESS,
             source,
             eventType,
@@ -43,11 +43,11 @@ public class IncomingEventService {
     }
 
     @Transactional
-    public <T> IncomingEvent<T> createEvent(String request, EventTypeEnum eventType, SourceEnum source, Class<T> payloadType) {
+    public <T> IncomingEvent<T> createEvent(String request, EventTypeEnum eventType, SourceEnum source, String traceId, Class<T> payloadType) {
         var incomingEventEntity = new IncomingEventEntity(
             UUID.randomUUID(),
             UUID.randomUUID(),
-            UUID.randomUUID(),
+            traceId,
             EventStatusEnum.SUCCESS,
             source.name(),
             eventType.name(),

@@ -36,8 +36,8 @@ public class OutgoingEventEntity {
     @Column(name = "request_id", columnDefinition = "uuid", nullable = false)
     private UUID requestId;
 
-    @Column(name = "trace_id", columnDefinition = "uuid", nullable = false)
-    private UUID traceId;
+    @Column(name = "trace_id", nullable = false, length = 50)
+    private String traceId;
 
     @Column(name = "destination", nullable = false, length = 50)
     private String destination;

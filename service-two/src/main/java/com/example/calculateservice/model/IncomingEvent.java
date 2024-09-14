@@ -11,7 +11,7 @@ import lombok.Setter;
 public class IncomingEvent<T> {
     private UUID id;
     private UUID requestId;
-    private UUID traceId;
+    private String traceId;
     private EventStatusEnum status;
     private String source;
     private String eventType;

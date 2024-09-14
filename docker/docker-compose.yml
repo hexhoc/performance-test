@@ -29,7 +29,7 @@ services:
       # - pgdata:/var/lib/postgresql/data
       # - pgconf:/etc/postgresql
       # - pglog:/var/log/postgresql
-      - ./config/postgres/init_scripts:/docker-entrypoint-initdb.d
+      - ./postgres/init_scripts:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
@@ -71,11 +71,12 @@ services:
     container_name: grafana
     restart: always
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
     volumes:
-      - ./config/grafana_ds/provisioning/:/etc/grafana/provisioning/
-      - ./config/grafana:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+#      - ./grafana:/var/lib/grafana
 
   prometheus:
     image: prom/prometheus
@@ -86,4 +87,10 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"

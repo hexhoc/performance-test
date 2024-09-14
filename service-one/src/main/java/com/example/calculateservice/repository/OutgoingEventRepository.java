@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OutgoingEventRepository extends JpaRepository<OutgoingEventEntity, UUID> {
-    Optional<OutgoingEventEntity> findByTraceId(UUID traceId);
+    Optional<OutgoingEventEntity> findByTraceId(String traceId);
     Optional<OutgoingEventEntity> findByRequestId(UUID correlationId);
 }

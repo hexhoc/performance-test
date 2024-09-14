@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CalculationController {
     private final StepOneCommandHandler stepOneCommandHandler;
 
-
     @GetMapping("/calculate")
     @Timed(value = "calculation.time", description = "Time taken to start calculation")
     public ResponseEntity<CalculationDto> getCalculate(@RequestParam("id") Long id){

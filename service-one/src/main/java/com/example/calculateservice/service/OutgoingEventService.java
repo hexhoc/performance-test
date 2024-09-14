@@ -29,8 +29,8 @@ public class OutgoingEventService {
         var outgoingEventEntity = new OutgoingEventEntity(
             UUID.randomUUID(),
             incomingEvent.getId(),
-            incomingEvent.getTraceId(),
             incomingEvent.getRequestId(),
+            incomingEvent.getTraceId(),
             topic,
             eventType.name(),
             response,

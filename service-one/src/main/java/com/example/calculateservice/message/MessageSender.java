@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class MessageSender {
 
   private final KafkaTemplate<String, String> kafkaTemplate;
-      
+
   public void send(OutgoingEventEntity outgoingEvent, String topicName) {
     try {
       ProducerRecord<String, String> record = new ProducerRecord<String, String>(
@@ -37,8 +37,9 @@ public class MessageSender {
       future.whenComplete(
           (res, error) -> {
             if (error != null) {
-              log.error("Unable to deliver message [{}]. {}", res, error.getMessage());
+                log.error("Unable to deliver message [{}]. {}", res, error.getMessage());
             } else if (res != null) {
+                log.info("Sent({}): {}", res.getProducerRecord().key(), res.getProducerRecord().value());
 //               log.info("Message [{}] delivered with offset {}", res, res.getRecordMetadata().offset());
             }
           });

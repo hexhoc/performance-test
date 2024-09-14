@@ -58,6 +58,9 @@ Note: This README assumes you are familiar with basic concepts of Kafka and micr
 # Prometheus and grafana
 In this project added prometheus metrics with grafana
 
+https://coderstower.com/2021/11/16/spring-boot-observability-setting-up-micrometer-grafana-and-prometheus/
+https://spring.academy/guides/spring-spring-prometheus
+
 Added:
 1. Dependency **spring-boot-starter-actuator**. For prometheus
 2. Dependency **micrometer-registry-prometheus**. For custom prometheus metric
@@ -81,3 +84,11 @@ management:
 7. Check grafana http://localhost:3000 Username: admin; Password: admin;
 8. Add Prometheus as a data source by navigating to Configuration > Data Sources > Add data source in Grafana’s UI. We select Prometheus as the type and specify the URL where Prometheus is running, usually http://localhost:9090 (or `http://<container_name>:9090`).
    Save & Test to confirm Grafana can successfully connect to Prometheus.
+
+# Tracing and logging
+
+## Kafka Tracing with Spring Boot and Open Telemetry
+We will use the Micrometer library for sending traces and Jaeger for storing and visualizing them. Spring Kafka comes with built-in integration with Micrometer for the KafkaTemplate and listener containers. You will also see how to configure the Spring Kafka observability to add our custom tags to traces.
+
+https://piotrminkowski.com/2023/11/15/kafka-tracing-with-spring-boot-and-open-telemetry/
+

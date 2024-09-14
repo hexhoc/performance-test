@@ -7,6 +7,7 @@ import com.example.calculateservice.dto.CalculationDto;
 import com.example.calculateservice.service.CalculationService;
 import com.example.calculateservice.service.IncomingEventService;
 import com.example.calculateservice.service.OutgoingEventService;
+import com.example.calculateservice.utils.TraceUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class StepOneCommandHandler {
             "{\"id\":%d}".formatted(id),
             EventTypeEnum.STEP_ONE,
             SourceEnum.HTTP,
+            TraceUtil.getTraceId(),
             Object.class);
         try {
             var calculationDto = calculationService.findById(id)

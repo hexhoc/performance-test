@@ -1,4 +1,4 @@
-# grafana/provisioning/dashboards/all.yaml
+# grafana/provisioning/dashboards/dashboard.yaml
 apiVersion: 1
 
 providers:
