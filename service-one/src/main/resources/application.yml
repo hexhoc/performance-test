@@ -23,6 +23,14 @@ management:
   otlp:
     tracing:
       endpoint: http://localhost:4318/v1/traces
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
 
 # logging:
 #   level:

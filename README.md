@@ -54,6 +54,27 @@ docker-compose up -d
 ```
 Note: This README assumes you are familiar with basic concepts of Kafka and microservices.
 
+# Gatling test
+The Gatling Bundle gives you a quick start to your Gatling journey.
+It is based on the [Gatling Maven Plugin demo, in Java](https://github.com/gatling/gatling-maven-plugin-demo-java).
+
+## Run current test locally
+
+```console
+mvn gatling:test -Dgatling.simulationClass=kafkahighload.HighloadDbSimulation -DUSERS=10 -DRAMP_DURATION=20
+```
+
+## Run a test locally
+
+```console
+mvn gatling:test
+```
+
+## Run the Gatling Recorder
+
+```console
+mvn gatling:recorder
+```
 
 # Prometheus and grafana
 In this project added prometheus metrics with grafana
@@ -91,4 +112,4 @@ management:
 We will use the Micrometer library for sending traces and Jaeger for storing and visualizing them. Spring Kafka comes with built-in integration with Micrometer for the KafkaTemplate and listener containers. You will also see how to configure the Spring Kafka observability to add our custom tags to traces.
 
 https://piotrminkowski.com/2023/11/15/kafka-tracing-with-spring-boot-and-open-telemetry/
-
+https://readmedium.com/a-guide-to-enabling-tracing-in-spring-boot-and-kafka-95f49a197226

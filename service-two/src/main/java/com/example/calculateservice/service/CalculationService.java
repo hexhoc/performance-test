@@ -4,6 +4,7 @@ import com.example.calculateservice.dto.CalculationDto;
 import com.example.calculateservice.entity.CalculationEntity;
 import com.example.calculateservice.mapper.CalculationMapper;
 import com.example.calculateservice.repository.CalculationRepository;
+import com.example.calculateservice.utils.HighloadUtil;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,14 @@ public class CalculationService {
     private final CalculationMapper calculationMapper;
 
     private CalculationEntity findByIdOrElseThrow(long id) {
+        HighloadUtil.randomCase();
         return calculationRepository.findById(id)
             .orElseThrow(() -> new ObjectNotFoundException(id, CalculationEntity.class.getName()));
     }
 
     @Transactional
     public void createIfNotExist(long id) {
+        HighloadUtil.randomCase();
         var calculationOpt = calculationRepository.findById(id);
         if (calculationOpt.isEmpty())
             create(id);
@@ -31,6 +34,7 @@ public class CalculationService {
 
     @Transactional
     public CalculationDto calculateValue(Long id, int valueNum) {
+        HighloadUtil.randomCase();
         var calculationEntity = findByIdOrElseThrow(id);
         calculationEntity = calculationRepository.save(calculationEntity);
 

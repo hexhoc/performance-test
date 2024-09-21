@@ -4,6 +4,7 @@ import com.example.calculateservice.dto.CalculationDto;
 import com.example.calculateservice.entity.CalculationEntity;
 import com.example.calculateservice.mapper.CalculationMapper;
 import com.example.calculateservice.repository.CalculationRepository;
+import com.example.calculateservice.utils.HighloadUtil;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -21,10 +22,14 @@ public class CalculationService {
 
     @Transactional
     public Optional<CalculationDto> findById(Long id) {
+        HighloadUtil.randomCase();
         return calculationRepository.findById(id).map(calculationMapper::toDto);
     }
 
+    @Transactional
     public CalculationDto create(Long id) {
+        HighloadUtil.randomCase();
+
         CalculationEntity entity = new CalculationEntity();
         entity.setId(id);
         entity.setName("Example name");
@@ -37,7 +42,9 @@ public class CalculationService {
         return calculationMapper.toDto(entity);
     }
 
+    @Transactional
     public void update(CalculationDto payload) {
+        HighloadUtil.randomCase();
         var entity = calculationMapper.toEntity(payload);
         calculationRepository.save(entity);
     }
