@@ -1,5 +1,7 @@
 package com.example.serviceone.dto;
 
+import com.example.serviceone.entity.OperationStatusEnum;
+import com.example.serviceone.entity.OperationTypeEnum;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -10,8 +12,8 @@ import java.util.UUID;
 public record OperationDto(
         UUID id,
         String name,
-        String type,
-        String status,
+        OperationTypeEnum type,
+        OperationStatusEnum status,
         Long containerId,
         BigDecimal amount,
         LocalDateTime created,

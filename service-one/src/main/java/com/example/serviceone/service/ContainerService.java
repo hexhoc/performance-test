@@ -3,7 +3,6 @@ package com.example.serviceone.service;
 import com.example.serviceone.client.ServiceTwoClient;
 import com.example.serviceone.dto.ContainerDto;
 import com.example.serviceone.dto.ContainerUpdateRequest;
-import com.example.serviceone.entity.OperationEntity;
 import com.example.serviceone.exception.ServiceTwoIntegrationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,14 +37,8 @@ public class ContainerService {
         return containerDto;
     }
 
-    public ContainerDto update(OperationEntity operationEntity) {
-        ContainerUpdateRequest containerUpdateRequest = ContainerUpdateRequest.builder()
-                .id(operationEntity.getContainerId())
-                .operationId(operationEntity.getId())
-                .operationType(operationEntity.getType().name())
-                .amount(operationEntity.getAmount())
-                .build();
-
+    // TODO: Add retryable
+    public ContainerDto update(ContainerUpdateRequest containerUpdateRequest) {
         return serviceTwoClient.updateContainer(containerUpdateRequest);
     }
 

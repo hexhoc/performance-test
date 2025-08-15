@@ -42,7 +42,7 @@ public class OperationController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public OperationResponse createOperation(@Valid @RequestBody OperationCreateRequest request) {
-        return operationService.createOperation(request);
+        return operationService.create(request);
     }
 
     @PostMapping("/async")
@@ -53,8 +53,8 @@ public class OperationController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public String createOperationAsync(@Valid @RequestBody OperationCreateRequest request) {
-        return operationService.createOperationAsync(request);
+    public OperationResponse createOperationAsync(@Valid @RequestBody OperationCreateRequest request) {
+        return operationService.createAsync(request);
     }
 
     @GetMapping("/{id}")
@@ -67,10 +67,10 @@ public class OperationController {
     public OperationDto getOperation(
             @Parameter(description = "ID of the operation to be retrieved", required = true)
             @PathVariable UUID id) {
-        return operationService.getOperation(id);
+        return operationService.getById(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @Operation(summary = "Update an existing operation")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operation updated successfully"),
@@ -80,9 +80,8 @@ public class OperationController {
     })
     public OperationResponse updateOperation(
             @Parameter(description = "ID of the operation to be updated", required = true)
-            @PathVariable UUID id,
             @Valid @RequestBody OperationUpdateRequest request) {
-        return operationService.updateOperation(id, request);
+        return operationService.update(request);
     }
 
     @DeleteMapping("/{id}")
@@ -95,6 +94,6 @@ public class OperationController {
     public OperationResponse deleteOperation(
             @Parameter(description = "ID of the operation to be deleted", required = true)
             @PathVariable UUID id) {
-        return operationService.deleteOperation(id);
+        return operationService.deleteById(id);
     }
 }

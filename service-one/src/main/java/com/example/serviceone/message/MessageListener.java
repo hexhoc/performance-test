@@ -27,9 +27,9 @@ public class MessageListener {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @KafkaListener(
-        id = "serviceOneConsume",
+        id = "service-one-consume",
         topics = {KafkaConfig.SERVICE_TWO_TOPIC},
-        groupId = "serviceOneGroup"
+        groupId = "service-one-group"
     )
     public void orderEventListener(
         @Payload String messagePayloadJson,

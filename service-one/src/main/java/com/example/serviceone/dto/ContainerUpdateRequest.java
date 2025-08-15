@@ -1,5 +1,6 @@
 package com.example.serviceone.dto;
 
+import com.example.serviceone.entity.OperationTypeEnum;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ import java.util.UUID;
 public record ContainerUpdateRequest(
         Long id,
         UUID operationId,
-        String operationType,
+        OperationTypeEnum operationType,
         BigDecimal amount
 ) {
 }

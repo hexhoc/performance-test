@@ -1,6 +1,6 @@
 package com.example.serviceone.dto;
 
-import com.example.serviceone.entity.OperationEntity.OperationType;
+import com.example.serviceone.entity.OperationTypeEnum;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +15,7 @@ public record OperationCreateRequest(
         String name,
 
         @NotNull(message = "Type is required")
-        OperationType type,
+        OperationTypeEnum type,
 
         @NotNull(message = "containerId is required")
         Long containerId,

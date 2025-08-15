@@ -2,7 +2,10 @@ package com.example.serviceone.handler;
 
 import com.example.serviceone.config.KafkaConfig;
 import com.example.serviceone.constant.EventTypeEnum;
+import com.example.serviceone.dto.ContainerUpdateResponse;
+import com.example.serviceone.entity.OperationStatusEnum;
 import com.example.serviceone.message.event.StepOneEndEvent;
+import com.example.serviceone.model.IncomingEvent;
 import com.example.serviceone.service.IncomingEventService;
 import com.example.serviceone.service.OperationService;
 import com.example.serviceone.service.OutgoingEventService;
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -26,20 +31,31 @@ public class StepOneEndEventHandler {
     @Timed(value = "step.one.end.handler.time")
     public void handle(StepOneEndEvent stepOneEndEvent) {
         log.info("Handle event: STEP 1 END");
-        var incomingEvent = incomingEventService.createEvent(
-            stepOneEndEvent.getPayload(),
-            stepOneEndEvent.getTraceId(),
-            stepOneEndEvent.getRequestId(),
-            stepOneEndEvent.getFrom(),
-            stepOneEndEvent.getEventType(),
-            CalculationDto.class);
+        var incomingEvent = createIncomingEvent(stepOneEndEvent);
         try {
-            operationService.update(incomingEvent.getPayload());
+            ContainerUpdateResponse containerUpdateResponse = incomingEvent.getPayload();
+
+            OperationStatusEnum operationStatus = Objects.isNull(containerUpdateResponse.errorCode())
+                    ? OperationStatusEnum.COMPLETED
+                    : OperationStatusEnum.FAILED;
+
+            operationService.updateStatus(containerUpdateResponse.operationId(), operationStatus);
+
             incomingEventService.saveWithSuccess(incomingEvent);
             outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_TWO, objectMapper.writeValueAsString(incomingEvent.getPayload()), KafkaConfig.SERVICE_ONE_TOPIC);
         } catch (Exception e) {
             log.error(e.getMessage());
             incomingEventService.saveWithError(incomingEvent);
         }
+    }
+
+    private IncomingEvent<ContainerUpdateResponse> createIncomingEvent(StepOneEndEvent stepOneEndEvent) {
+        return incomingEventService.createEvent(
+                stepOneEndEvent.getPayload(),
+                stepOneEndEvent.getTraceId(),
+                stepOneEndEvent.getRequestId(),
+                stepOneEndEvent.getFrom(),
+                stepOneEndEvent.getEventType(),
+                ContainerUpdateResponse.class);
     }
 }

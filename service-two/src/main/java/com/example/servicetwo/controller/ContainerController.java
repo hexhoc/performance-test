@@ -34,14 +34,14 @@ public class ContainerController {
                    @ApiResponse(responseCode = "404", description = "Container not found")
                })
     public ContainerDto getContainer(@PathVariable Long id) {
-        return containerService.getContainer(id);
+        return containerService.getById(id);
     }
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new container")
     public ContainerDto createContainer(@Valid @RequestBody ContainerCreateRequest request) {
-        return containerService.createContainer(request);
+        return containerService.create(request);
     }
     
     @PutMapping
@@ -51,7 +51,7 @@ public class ContainerController {
                    @ApiResponse(responseCode = "404", description = "Container not found")
                })
     public ContainerDto updateContainer(@Valid @RequestBody ContainerUpdateRequest request) {
-        return containerService.updateContainer(request);
+        return containerService.update(request);
     }
     
     @DeleteMapping("/{id}")
@@ -62,6 +62,6 @@ public class ContainerController {
                    @ApiResponse(responseCode = "404", description = "Container not found")
                })
     public void deleteContainer(@PathVariable Long id) {
-        containerService.deleteContainer(id);
+        containerService.deleteById(id);
     }
 }

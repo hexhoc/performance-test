@@ -29,14 +29,6 @@ import java.util.UUID;
 @Table(name = "operations")
 public class OperationEntity {
 
-    public enum OperationType {
-        INCREASE, DECREASE
-    }
-
-    public enum OperationStatus {
-        CREATED, COMPLETED, FAILED
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -46,11 +38,11 @@ public class OperationEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private OperationType type;
+    private OperationTypeEnum type;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private OperationStatus status;
+    private OperationStatusEnum status;
 
     @Column(nullable = false)
     private Long containerId;

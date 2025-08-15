@@ -22,14 +22,14 @@ public class ContainerService {
     private final ContainerRepository containerRepository;
     private final ContainerMapper containerMapper;
 
-    public ContainerDto getContainer(Long id) {
+    public ContainerDto getById(Long id) {
         ContainerEntity container = containerRepository.findById(id)
                 .orElseThrow(() -> new ContainerNotFoundException(id));
         return containerMapper.toDto(container);
     }
 
     @Transactional
-    public ContainerDto createContainer(ContainerCreateRequest request) {
+    public ContainerDto create(ContainerCreateRequest request) {
         ContainerEntity container = containerMapper.toEntity(request);
         container.setDeleted(false);
         container.setLocked(false);
@@ -38,12 +38,10 @@ public class ContainerService {
     }
 
     @Transactional
-    public ContainerDto updateContainer(ContainerUpdateRequest request) {
-        // TODO: Use select for update
-        ContainerEntity container = containerRepository.findById(request.id())
+    public ContainerDto update(ContainerUpdateRequest request) {
+        ContainerEntity container = containerRepository.findByIdForUpdate(request.id())
                 .orElseThrow(() -> new ContainerNotFoundException(request.id()));
 
-        // TODO: Add container history and write to audit log
         BigDecimal operationAmount = request.operationType().equals(OperationTypeEnum.DECREASE)
                 ? request.amount().negate()
                 : request.amount();
@@ -62,7 +60,7 @@ public class ContainerService {
     }
 
     @Transactional
-    public void deleteContainer(Long id) {
+    public void deleteById(Long id) {
         ContainerEntity container = containerRepository.findById(id)
                 .orElseThrow(() -> new ContainerNotFoundException(id));
         container.setDeleted(true);

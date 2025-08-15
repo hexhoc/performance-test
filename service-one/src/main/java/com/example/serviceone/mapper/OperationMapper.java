@@ -1,8 +1,10 @@
 package com.example.serviceone.mapper;
 
+import com.example.serviceone.dto.ContainerUpdateRequest;
 import com.example.serviceone.dto.OperationCreateRequest;
 import com.example.serviceone.dto.OperationDto;
 import com.example.serviceone.entity.OperationEntity;
+import com.example.serviceone.entity.OperationStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +18,8 @@ public class OperationMapper {
         return OperationDto.builder()
                 .id(operationEntity.getId())
                 .name(operationEntity.getName())
-                .type(operationEntity.getType().name())
-                .status(operationEntity.getStatus().name())
+                .type(operationEntity.getType())
+                .status(operationEntity.getStatus())
                 .containerId(operationEntity.getContainerId())
                 .amount(operationEntity.getAmount())
                 .created(operationEntity.getCreated())
@@ -25,8 +27,17 @@ public class OperationMapper {
                 .build();
     }
 
+    public ContainerUpdateRequest toContainerUpdateRequest(OperationEntity entity) {
+        return ContainerUpdateRequest.builder()
+                .id(entity.getContainerId())
+                .operationId(entity.getId())
+                .operationType(entity.getType())
+                .amount(entity.getAmount())
+                .build();
+    }
 
-    public OperationEntity toEntity(OperationCreateRequest request, OperationEntity.OperationStatus status) {
+
+    public OperationEntity toEntity(OperationCreateRequest request, OperationStatusEnum status) {
         return OperationEntity.builder()
                 .id(UUID.randomUUID())
                 .name(request.name())
