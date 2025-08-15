@@ -20,7 +20,7 @@ public class ServiceTwoClient {
 
 
     public ServiceTwoClient(
-            @Value("${service-two.url}") String serviceTwoUrl,
+            @Value("${custom.service-two.url}") String serviceTwoUrl,
             RestClient.Builder restClientBuilder) {
         this.restClient = restClientBuilder
                 .baseUrl(serviceTwoUrl)
@@ -33,7 +33,7 @@ public class ServiceTwoClient {
                 .build();
     }
 
-    public ContainerDto getContainer(Long containerId) {
+    public ContainerDto getById(Long containerId) {
         return restClient.get()
                 .uri("/api/v1/containers/%s".formatted(containerId.toString()))
                 .retrieve()
@@ -54,7 +54,7 @@ public class ServiceTwoClient {
                 .body(ContainerDto.class);
     }
 
-    public ContainerDto updateContainer(ContainerUpdateRequest containerUpdateRequest) {
+    public ContainerDto update(ContainerUpdateRequest containerUpdateRequest) {
         return restClient.put()
                 .uri("/api/v1/containers")
                 .body(containerUpdateRequest)

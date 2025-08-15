@@ -24,10 +24,9 @@ import java.util.Objects;
 public class ContainerService {
     private final ServiceTwoClient serviceTwoClient;
 
-    // TODO: delete this method
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 1000))
     public ContainerDto getById(Long containerId) {
-        ContainerDto containerDto = serviceTwoClient.getContainer(containerId);
+        ContainerDto containerDto = serviceTwoClient.getById(containerId);
         if (Objects.isNull(containerDto)) {
             String errorMessage = "Container not found by id: %s".formatted(containerId);
             log.error(errorMessage);
@@ -37,9 +36,9 @@ public class ContainerService {
         return containerDto;
     }
 
-    // TODO: Add retryable
+    @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 1000))
     public ContainerDto update(ContainerUpdateRequest containerUpdateRequest) {
-        return serviceTwoClient.updateContainer(containerUpdateRequest);
+        return serviceTwoClient.update(containerUpdateRequest);
     }
 
 }

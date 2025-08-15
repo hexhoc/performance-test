@@ -88,6 +88,7 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:

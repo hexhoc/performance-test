@@ -1,5 +1,16 @@
 # Highload Performance Test Project
 
+## TODO: 
+
+1. Update README 
+2. Add test using test container
+3. Add simple unit test
+4. Add common-lib with dto and exceptions and etc
+5. Add starter with transaction outbox
+6. Think about interaction between layers
+7. Test grafana
+
+
 ## Description
 This project is designed to demonstrate a simple example of a highload performance test within a microservice architecture.
 All microservices based on spring boot 3 with event driven interaction based on kafka
