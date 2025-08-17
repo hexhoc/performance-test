@@ -6,7 +6,6 @@
 2. Add test using test container
 3. Add simple unit test
 4. Add common-lib with dto and exceptions and etc
-5. Add starter with transaction outbox
 6. Think about interaction between layers
 7. Test grafana
 
@@ -21,13 +20,13 @@ This project explores the concept of handling high-volume data and processing wi
 ## Component
 1. service-one: This service represents the first stage of the performance testing pipeline.
 2. service-two: This service receives data from "service-one" and processes it further.
-3. service-three: This service represents the third stage of the performance testing process.
 1. Grafana
 2. Kafka
 3. provectuslabs/kafka-ui
 4. Postgresql
 5. Guntling
 6. Jaeger
+7. Maven
 
 ## Algorithm:
 ![sequence_diagram.png](./doc/uml/sequence_diagram.png)
@@ -44,15 +43,27 @@ Clone the repository:
 git clone <repository_url>
 ```
 
-Build the services:
+Build infrastructure:
 ```
+cd docker
 docker-compose build
+```
+
+Run the infrastructure:
+```
+docker-compose up -d
 ```
 
 Run the services:
 ```
-docker-compose up -d
+cd ./service-one
+mvn spring-boot:run
+
+cd ./service-two
+mvn spring-boot:run
 ```
+
+
 Note: This README assumes you are familiar with basic concepts of Kafka and microservices.
 
 # Gatling test
