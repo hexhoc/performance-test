@@ -1,0 +1,2 @@
+com.example.transactionalbox.configuration.TransactionalBoxAutoconfiguration
+com.example.transactionalbox.configuration.TransactionalBoxLiquibaseAutoconfiguration

@@ -6,10 +6,10 @@ import com.example.servicetwo.dto.ContainerUpdateRequest;
 import com.example.servicetwo.dto.ContainerUpdateResponse;
 import com.example.servicetwo.exception.ErrorCodeValue;
 import com.example.servicetwo.message.event.StepOneCommand;
-import com.example.servicetwo.model.IncomingEvent;
 import com.example.servicetwo.service.ContainerService;
-import com.example.servicetwo.service.IncomingEventService;
-import com.example.servicetwo.service.OutgoingEventService;
+import com.example.transactionalbox.model.IncomingEvent;
+import com.example.transactionalbox.service.IncomingEventService;
+import com.example.transactionalbox.service.OutgoingEventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -39,12 +39,12 @@ public class StepOneCommandHandler {
             String payload = buildContainerUpdateResponsePayload(containerUpdateRequest);
 
             incomingEventService.saveWithSuccess(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE_END, payload, KafkaConfig.SERVICE_TWO_TOPIC);
+            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE_END.name(), payload, KafkaConfig.SERVICE_TWO_TOPIC);
         } catch (Exception e) {
             log.error(e.getMessage());
             String payload = buildContainerUpdateResponsePayload(containerUpdateRequest, ErrorCodeValue.BUSINESS_ERROR, e.getMessage());
             incomingEventService.saveWithError(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE_END, payload, KafkaConfig.SERVICE_TWO_TOPIC);
+            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE_END.name(), payload, KafkaConfig.SERVICE_TWO_TOPIC);
         }
     }
 

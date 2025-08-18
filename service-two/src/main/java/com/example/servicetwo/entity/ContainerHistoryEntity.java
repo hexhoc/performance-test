@@ -1,5 +1,6 @@
 package com.example.servicetwo.entity;
 
+import com.example.servicetwo.dto.OperationTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

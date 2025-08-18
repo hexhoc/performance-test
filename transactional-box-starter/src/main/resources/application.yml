@@ -1,0 +1,5 @@
+spring:
+  liquibase:
+    enabled: true
+    default-schema: tbox
+    change-log: classpath:/db/changelog/db.changelog-transactional-box.xml

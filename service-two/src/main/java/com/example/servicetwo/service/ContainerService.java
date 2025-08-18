@@ -4,7 +4,7 @@ import com.example.servicetwo.dto.ContainerCreateRequest;
 import com.example.servicetwo.dto.ContainerDto;
 import com.example.servicetwo.dto.ContainerUpdateRequest;
 import com.example.servicetwo.entity.ContainerEntity;
-import com.example.servicetwo.entity.OperationTypeEnum;
+import com.example.servicetwo.dto.OperationTypeEnum;
 import com.example.servicetwo.exception.ContainerNotFoundException;
 import com.example.servicetwo.mapper.ContainerMapper;
 import com.example.servicetwo.repository.ContainerRepository;
@@ -39,7 +39,7 @@ public class ContainerService {
 
     @Transactional
     public ContainerDto update(ContainerUpdateRequest request) {
-        ContainerEntity container = containerRepository.findByIdForUpdate(request.id())
+        ContainerEntity container = containerRepository.findById(request.id())
                 .orElseThrow(() -> new ContainerNotFoundException(request.id()));
 
         BigDecimal operationAmount = request.operationType().equals(OperationTypeEnum.DECREASE)

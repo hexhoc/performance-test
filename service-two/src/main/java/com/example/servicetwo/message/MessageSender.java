@@ -1,7 +1,7 @@
 package com.example.servicetwo.message;
 
 
-import com.example.servicetwo.entity.OutgoingEventEntity;
+import com.example.transactionalbox.entity.OutgoingEventEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;

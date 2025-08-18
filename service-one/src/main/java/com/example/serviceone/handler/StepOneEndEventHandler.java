@@ -5,10 +5,10 @@ import com.example.serviceone.constant.EventTypeEnum;
 import com.example.serviceone.dto.ContainerUpdateResponse;
 import com.example.serviceone.entity.OperationStatusEnum;
 import com.example.serviceone.message.event.StepOneEndEvent;
-import com.example.serviceone.model.IncomingEvent;
-import com.example.serviceone.service.IncomingEventService;
 import com.example.serviceone.service.OperationService;
-import com.example.serviceone.service.OutgoingEventService;
+import com.example.transactionalbox.model.IncomingEvent;
+import com.example.transactionalbox.service.IncomingEventService;
+import com.example.transactionalbox.service.OutgoingEventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class StepOneEndEventHandler {
             operationService.updateStatus(containerUpdateResponse.operationId(), operationStatus);
 
             incomingEventService.saveWithSuccess(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_TWO, objectMapper.writeValueAsString(incomingEvent.getPayload()), KafkaConfig.SERVICE_ONE_TOPIC);
+            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_TWO.name(), objectMapper.writeValueAsString(incomingEvent.getPayload()), KafkaConfig.SERVICE_ONE_TOPIC);
         } catch (Exception e) {
             log.error(e.getMessage());
             incomingEventService.saveWithError(incomingEvent);

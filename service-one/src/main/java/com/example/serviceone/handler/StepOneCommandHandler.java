@@ -2,12 +2,12 @@ package com.example.serviceone.handler;
 
 import com.example.serviceone.config.KafkaConfig;
 import com.example.serviceone.constant.EventTypeEnum;
-import com.example.serviceone.constant.SourceEnum;
 import com.example.serviceone.dto.ContainerUpdateRequest;
-import com.example.serviceone.model.IncomingEvent;
-import com.example.serviceone.service.IncomingEventService;
-import com.example.serviceone.service.OutgoingEventService;
 import com.example.serviceone.utils.TraceUtil;
+import com.example.transactionalbox.constant.SourceEnum;
+import com.example.transactionalbox.model.IncomingEvent;
+import com.example.transactionalbox.service.IncomingEventService;
+import com.example.transactionalbox.service.OutgoingEventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class StepOneCommandHandler {
         var incomingEvent = createIncomingEvent(payload);
         try {
             incomingEventService.saveWithSuccess(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE, payload, KafkaConfig.SERVICE_ONE_TOPIC);
+            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE.name(), payload, KafkaConfig.SERVICE_ONE_TOPIC);
         } catch (Exception e) {
             incomingEventService.saveWithError(incomingEvent);
             throw new RuntimeException(e);
@@ -42,7 +42,7 @@ public class StepOneCommandHandler {
     private IncomingEvent<ContainerUpdateRequest> createIncomingEvent(String payload) {
         return incomingEventService.createEvent(
                 payload,
-                EventTypeEnum.STEP_ONE,
+                EventTypeEnum.STEP_ONE.name(),
                 SourceEnum.HTTP,
                 TraceUtil.getTraceId(),
                 ContainerUpdateRequest.class);

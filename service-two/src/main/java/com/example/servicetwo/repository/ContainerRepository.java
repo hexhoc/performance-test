@@ -13,6 +13,7 @@ public interface ContainerRepository extends JpaRepository<ContainerEntity, Long
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "3000")})
-    Optional<ContainerEntity> findByIdForUpdate(Long id);
+    @Override
+    Optional<ContainerEntity> findById(Long id);
 
 }
