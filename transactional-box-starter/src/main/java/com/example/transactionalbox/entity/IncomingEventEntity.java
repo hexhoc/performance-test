@@ -1,7 +1,6 @@
 package com.example.transactionalbox.entity;
 
 import com.example.transactionalbox.constant.EventStatusEnum;
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -50,7 +48,9 @@ public class IncomingEventEntity {
     @Column(name = "event_type", nullable = false, length = 50)
     private String eventType;
 
-    @Type(JsonBinaryType.class)
+    @Column(name = "comment", nullable = true, length = 255)
+    private String comment;
+
     @Column(name = "payload", columnDefinition = "jsonb")
     private String payload; // Assuming the request is a JSON String
 
@@ -58,4 +58,6 @@ public class IncomingEventEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "version", nullable = false)
+    private Integer version;
 }

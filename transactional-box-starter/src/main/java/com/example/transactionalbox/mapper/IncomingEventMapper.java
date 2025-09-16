@@ -1,8 +1,8 @@
 package com.example.transactionalbox.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.transactionalbox.entity.IncomingEventEntity;
 import com.example.transactionalbox.model.IncomingEvent;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,10 @@ public class IncomingEventMapper {
         if (Objects.nonNull(entity.getPayload())) {
             model.setPayload(objectMapper.readValue(entity.getPayload(), payloadType));
         }
+        model.setCreatedAt(entity.getCreatedAt());
         model.setEventType(entity.getEventType());
+        model.setComment(entity.getComment());
+        model.setVersion(entity.getVersion());
 
         return model;
     }
@@ -44,7 +47,7 @@ public class IncomingEventMapper {
             entity.setPayload(null);
         }
         entity.setEventType(model.getEventType());
-
+        entity.setVersion(model.getVersion());
         return entity;
     }
 }

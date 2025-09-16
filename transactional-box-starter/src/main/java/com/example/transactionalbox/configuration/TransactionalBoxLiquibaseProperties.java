@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "transactionalbox.liquibase")
+@ConfigurationProperties(prefix = "transactional-box.liquibase")
 public class TransactionalBoxLiquibaseProperties {
 
     /**

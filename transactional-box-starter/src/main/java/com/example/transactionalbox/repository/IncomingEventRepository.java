@@ -80,6 +80,26 @@ public class IncomingEventRepository {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
 
+    public Optional<IncomingEventEntity> findByRequestIdAndEventTypeOrderByCreatedAtDesc(UUID requestId, String eventType) {
+        String sql = """
+        SELECT *
+        FROM incoming_events
+        WHERE trace_id = :requestId AND eventType = :eventType
+        ORDER BY created_at DESC
+        LIMIT 1
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("requestId", requestId);
+        params.put("eventType", eventType);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, rowMapper));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     // RowMapper implementation
     private static class IncomingEventRowMapper implements RowMapper<IncomingEventEntity> {
         @Override

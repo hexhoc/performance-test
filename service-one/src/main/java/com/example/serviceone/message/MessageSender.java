@@ -26,10 +26,10 @@ public class MessageSender {
     try {
       ProducerRecord<String, String> record = new ProducerRecord<String, String>(
           topicName,
-          outgoingEvent.getRequestId().toString(),
+          outgoingEvent.getRequestId(),
           outgoingEvent.getPayload());
-      record.headers().add("requestId", outgoingEvent.getRequestId().toString().getBytes());
-      record.headers().add("traceId", outgoingEvent.getTraceId().toString().getBytes());
+      record.headers().add("requestId", outgoingEvent.getRequestId().getBytes());
+      record.headers().add("traceId", outgoingEvent.getTraceId().getBytes());
       record.headers().add("from", outgoingEvent.getDestination().getBytes());
       record.headers().add("eventType", outgoingEvent.getEventType().getBytes());
 

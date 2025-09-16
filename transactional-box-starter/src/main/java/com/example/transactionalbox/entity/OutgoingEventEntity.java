@@ -1,6 +1,6 @@
 package com.example.transactionalbox.entity;
 
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import com.example.transactionalbox.enumeration.MessageBrokerEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -35,7 +34,7 @@ public class OutgoingEventEntity {
     private UUID incomingEventId;
 
     @Column(name = "request_id", columnDefinition = "uuid", nullable = false)
-    private UUID requestId;
+    private String requestId;
 
     @Column(name = "trace_id", nullable = false, length = 50)
     private String traceId;
@@ -43,10 +42,15 @@ public class OutgoingEventEntity {
     @Column(name = "destination", nullable = false, length = 50)
     private String destination;
 
+    @Column(name = "message_broker", nullable = false, length = 50)
+    private MessageBrokerEnum messageBroker;
+
     @Column(name = "event_type", nullable = false, length = 50)
     private String eventType;
 
-    @Type(JsonBinaryType.class)
+    @Column(name = "headers", columnDefinition = "jsonb")
+    private String headers;
+
     @Column(name = "payload", nullable = true, columnDefinition = "jsonb")
     private String payload; // Assuming the response is a JSON String
 

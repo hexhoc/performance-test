@@ -1,6 +1,10 @@
 # Highload Performance Test Project
 
 ## TODO: 
+1. Implement Scheduled class. Get scheduled event, send, and delete it from table
+2. Implement calling starter process method in services
+3. Implement creating scheduled event in services
+4. Fix liquibase migration
 
 1. Update README 
 2. Add test using test container

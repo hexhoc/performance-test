@@ -1,13 +1,18 @@
 package com.example.transactionalbox.repository;
 
 import com.example.transactionalbox.entity.OutgoingEventEntity;
+import lombok.NonNull;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -85,6 +90,55 @@ public class OutgoingEventRepository {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
 
+    public Optional<OutgoingEventEntity> findByIncomingEventId(@NonNull UUID incomingEventId) {
+        String sql = """
+        SELECT *
+        FROM outgoing_events
+        WHERE incoming_event_id = :incomingEventId
+        ORDER BY created_at DESC
+        LIMIT 1
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("incomingEventId", incomingEventId);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, rowMapper));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<OutgoingEventEntity> saveAll(List<OutgoingEventEntity> entities) {
+        if (entities == null || entities.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        String sql = """
+        INSERT INTO outgoing_events (incoming_event_id, request_id, trace_id, destination, 
+                                    message_broker, event_type, headers, payload, created_at)
+        VALUES (:incomingEventId, :requestId, :traceId, :destination, :messageBroker, 
+                :eventType, :headers::jsonb, :payload::jsonb, :createdAt)
+        """;
+
+        SqlParameterSource[] batchParams = entities.stream()
+                .map(entity -> new MapSqlParameterSource()
+                        .addValue("incomingEventId", entity.getIncomingEventId())
+                        .addValue("requestId", entity.getRequestId())
+                        .addValue("traceId", entity.getTraceId())
+                        .addValue("destination", entity.getDestination())
+                        .addValue("messageBroker", entity.getMessageBroker())
+                        .addValue("eventType", entity.getEventType())
+                        .addValue("headers", entity.getHeaders())
+                        .addValue("payload", entity.getPayload())
+                        .addValue("createdAt", entity.getCreatedAt()))
+                .toArray(SqlParameterSource[]::new);
+
+        jdbcTemplate.batchUpdate(sql, batchParams);
+
+        return entities;
+    }
+
     // RowMapper implementation
     private static class OutgoingEventRowMapper implements RowMapper<OutgoingEventEntity> {
         @Override
@@ -92,7 +146,7 @@ public class OutgoingEventRepository {
             return OutgoingEventEntity.builder()
                     .id((UUID) rs.getObject("id"))
                     .incomingEventId((UUID) rs.getObject("incoming_event_id"))
-                    .requestId((UUID) rs.getObject("request_id"))
+                    .requestId(rs.getString("request_id"))
                     .traceId(rs.getString("trace_id"))
                     .destination(rs.getString("destination"))
                     .eventType(rs.getString("event_type"))

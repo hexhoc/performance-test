@@ -16,8 +16,8 @@ public class IncomingEvent<T> {
     private EventStatusEnum status;
     private String source;
     private String eventType;
+    private String comment;
     private T payload; // Assuming the request is a JSON String
     private LocalDateTime createdAt;
-
-
+    private Integer version;
 }

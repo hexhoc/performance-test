@@ -30,6 +30,7 @@ public class StepOneCommandHandler {
         log.info("Handle event: STEP 1 START");
         String payload = objectMapper.writeValueAsString(containerUpdateRequest);
         var incomingEvent = createIncomingEvent(payload);
+
         try {
             incomingEventService.saveWithSuccess(incomingEvent);
             outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE.name(), payload, KafkaConfig.SERVICE_ONE_TOPIC);
@@ -42,9 +43,9 @@ public class StepOneCommandHandler {
     private IncomingEvent<ContainerUpdateRequest> createIncomingEvent(String payload) {
         return incomingEventService.createEvent(
                 payload,
-                EventTypeEnum.STEP_ONE.name(),
-                SourceEnum.HTTP,
                 TraceUtil.getTraceId(),
+                SourceEnum.HTTP.name(),
+                EventTypeEnum.STEP_ONE.name(),
                 ContainerUpdateRequest.class);
     }
 }

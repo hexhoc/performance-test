@@ -1,6 +1,7 @@
 --liquibase formatted sql
 --changeset hexhoc:20250817_02_initial_transactional_box_table.sql dbms=postgresql
 
+--TODO: Update columns using in entity classes
 CREATE TABLE tbox.incoming_events (
 	created_at timestamp(6) NOT NULL,
 	id uuid NOT NULL,

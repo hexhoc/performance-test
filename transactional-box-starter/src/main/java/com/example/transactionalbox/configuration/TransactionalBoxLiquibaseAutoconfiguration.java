@@ -19,7 +19,7 @@ import java.sql.Statement;
 @ConditionalOnClass(SpringLiquibase.class)
 @AutoConfigureAfter(LiquibaseAutoConfiguration.class)
 @EnableConfigurationProperties(TransactionalBoxLiquibaseProperties.class)
-@ConditionalOnProperty(prefix = "transactionalbox.liquibase", name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "transactional-box.liquibase", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class TransactionalBoxLiquibaseAutoconfiguration {
 
     private final TransactionalBoxLiquibaseProperties properties;
