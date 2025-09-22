@@ -42,7 +42,7 @@ public class StepOneEndEventHandler {
             operationService.updateStatus(containerUpdateResponse.operationId(), operationStatus);
 
             incomingEventService.saveWithSuccess(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_TWO.name(), objectMapper.writeValueAsString(incomingEvent.getPayload()), KafkaConfig.SERVICE_ONE_TOPIC);
+            outgoingEventService.createEvent(incomingEvent, EventTypeEnum.STEP_TWO.name(), objectMapper.writeValueAsString(incomingEvent.getPayload()), KafkaConfig.SERVICE_ONE_TOPIC);
         } catch (Exception e) {
             log.error(e.getMessage());
             incomingEventService.saveWithError(incomingEvent);

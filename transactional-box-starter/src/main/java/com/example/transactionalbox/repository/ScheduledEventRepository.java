@@ -1,6 +1,7 @@
 package com.example.transactionalbox.repository;
 
 import com.example.transactionalbox.entity.ScheduledEventEntity;
+import com.example.transactionalbox.enumeration.MessageBrokerEnum;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,10 @@ import java.util.Map;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-// TODO: CREATE BEAN
 public class ScheduledEventRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final ScheduledEventRowMapper rowMapper;
+    private final ScheduledEventRowMapper rowMapper = new ScheduledEventRowMapper();
 
     public ScheduledEventEntity save(ScheduledEventEntity entity) {
         String sql = """
@@ -128,7 +128,7 @@ public class ScheduledEventRepository {
                     .requestId(rs.getString("request_id"))
                     .destination(rs.getString("destination"))
                     .traceId(rs.getString("trace_id"))
-                    .messageBroker(rs.getString("message_broker"))
+                    .messageBroker(MessageBrokerEnum.valueOf(rs.getString("message_broker")))
                     .payload(rs.getString("body"))
                     .headers(rs.getString("headers"))
                     .createdAt(rs.getTimestamp("created_at").toLocalDateTime())

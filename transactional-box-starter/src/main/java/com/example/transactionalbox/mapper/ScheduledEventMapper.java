@@ -4,14 +4,16 @@ import com.example.transactionalbox.entity.OutgoingEventEntity;
 import com.example.transactionalbox.entity.ScheduledEventEntity;
 import com.example.transactionalbox.model.OutgoingEvent;
 import com.example.transactionalbox.model.ScheduledEvent;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
-// TODO: Create bean
 public class ScheduledEventMapper {
     private final ObjectMapper objectMapper;
 
@@ -21,7 +23,7 @@ public class ScheduledEventMapper {
                 .destination(source.getDestination())
                 .traceId(source.getTraceId())
                 .messageBroker(source.getMessageBroker())
-                .payload(source.getBody())
+                .payload(source.getPayload())
                 .headers(asJson(source.getHeaders()))
 //                .createdAt(source.getCreatedAt())
                 .build();
@@ -51,12 +53,32 @@ public class ScheduledEventMapper {
                 .build();
     }
 
+    public ScheduledEvent toModel(ScheduledEventEntity source) {
+        return ScheduledEvent.builder()
+                .requestId(source.getRequestId())
+                .destination(source.getDestination())
+                .traceId(source.getTraceId())
+                .messageBroker(source.getMessageBroker())
+                .payload(source.getPayload())
+                .headers(asMap(source.getHeaders()))
+                .build();
+    }
+
     @SneakyThrows
     private String asJson(Object source) {
         if (source == null) {
             return null;
         }
         return objectMapper.writeValueAsString(source);
+    }
+
+    @SneakyThrows
+    public Map<String, Object> asMap(String source) {
+        if (source == null) {
+            return null;
+        }
+        return objectMapper.readValue(source, new TypeReference<>() {
+        });
     }
 
 }

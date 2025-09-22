@@ -1,8 +1,13 @@
 package com.example.transactionalbox.producer;
 
+import com.example.transactionalbox.configuration.KafkaListenableFutureCallback;
+import com.example.transactionalbox.constant.MetricNameConstants;
+import com.example.transactionalbox.constant.MetricTagConstants;
 import com.example.transactionalbox.enumeration.MessageBrokerEnum;
 import com.example.transactionalbox.model.ScheduledEvent;
+import com.example.transactionalbox.service.MdcContextMapDecorator;
 import com.example.transactionalbox.service.ScheduledOutgoingEventService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -27,7 +32,6 @@ public class KafkaEventProducer implements ProduceOutgoingEventService<SendResul
     private static final Set<String> TECHNICAL_HEADERS = Set.of("traceparent");
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final TraceWrapper traceWrapper;
     private final ScheduledOutgoingEventService scheduledOutgoingEventService;
 
     @Override
@@ -40,7 +44,7 @@ public class KafkaEventProducer implements ProduceOutgoingEventService<SendResul
     )
     public List<Future<SendResult<String, String>>> produce(List<ScheduledEvent> events) {
         return events.stream()
-                .map(this::traceWrapProducing)
+                .map(this::produceInternal)
                 .toList();
     }
 
@@ -49,16 +53,8 @@ public class KafkaEventProducer implements ProduceOutgoingEventService<SendResul
         return MessageBrokerEnum.KAFKA;
     }
 
-    private Future<SendResult<String, String>> traceWrapProducing(ScheduledEvent event) {
-        return traceWrapper.withRequestMetadata(
-                event.getRequestId(),
-                event.getTraceId(),
-                () -> produceInternal(event)
-        );
-    }
-
     private Future<SendResult<String, String>> produceInternal(ScheduledEvent event) {
-        log.debug("Sending an event to the topic: '{}', key: '{}', value: {}", event.getDestination(), event.getRequestId(), event.getBody());
+        log.debug("Sending an event to the topic: '{}', key: '{}', value: {}", event.getDestination(), event.getRequestId(), event.getPayload());
         var producerRecord = getProducerRecord(event);
         prepareHeaders(producerRecord, event.getHeaders());
         var future = kafkaTemplate.send(producerRecord);
@@ -100,7 +96,7 @@ public class KafkaEventProducer implements ProduceOutgoingEventService<SendResul
                 null,
                 System.currentTimeMillis(),
                 event.getRequestId(),
-                event.getBody()
+                event.getPayload()
         );
     }
 

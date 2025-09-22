@@ -39,12 +39,12 @@ public class StepOneCommandHandler {
             String payload = buildContainerUpdateResponsePayload(containerUpdateRequest);
 
             incomingEventService.saveWithSuccess(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE_END.name(), payload, KafkaConfig.SERVICE_TWO_TOPIC);
+            outgoingEventService.createEvent(incomingEvent, EventTypeEnum.STEP_ONE_END.name(), payload, KafkaConfig.SERVICE_TWO_TOPIC);
         } catch (Exception e) {
             log.error(e.getMessage());
             String payload = buildContainerUpdateResponsePayload(containerUpdateRequest, ErrorCodeValue.BUSINESS_ERROR, e.getMessage());
             incomingEventService.saveWithError(incomingEvent);
-            outgoingEventService.createAndSend(incomingEvent, EventTypeEnum.STEP_ONE_END.name(), payload, KafkaConfig.SERVICE_TWO_TOPIC);
+            outgoingEventService.createEvent(incomingEvent, EventTypeEnum.STEP_ONE_END.name(), payload, KafkaConfig.SERVICE_TWO_TOPIC);
         }
     }
 

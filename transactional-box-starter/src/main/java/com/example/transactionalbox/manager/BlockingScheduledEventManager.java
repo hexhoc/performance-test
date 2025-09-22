@@ -1,8 +1,8 @@
 package com.example.transactionalbox.manager;
 
 import com.example.transactionalbox.configuration.BlockingOutgoingEventManagerProperties;
-import com.example.transactionalbox.entity.ScheduledEventEntity;
 import com.example.transactionalbox.enumeration.MessageBrokerEnum;
+import com.example.transactionalbox.model.ScheduledEvent;
 import com.example.transactionalbox.producer.ProduceOutgoingEventService;
 import com.example.transactionalbox.service.ScheduledOutgoingEventService;
 import jakarta.transaction.Transactional;
@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-// TODO: Create bean
 public class BlockingScheduledEventManager implements ScheduledEventManager {
 
     private final ScheduledOutgoingEventService scheduledOutgoingEventService;
@@ -50,7 +49,7 @@ public class BlockingScheduledEventManager implements ScheduledEventManager {
         scheduledOutgoingEventService.deleteEventsBySerials(serials(orderedEvents));
     }
 
-    private void produce(MessageBrokerEnum messageBroker, List<ScheduledEventEntity> scheduledEvents) {
+    private void produce(MessageBrokerEnum messageBroker, List<ScheduledEvent> scheduledEvents) {
         var produceEventService = produceEventServices.get(messageBroker);
         if (produceEventService == null) {
             throw new IllegalStateException("No producer found for message broker " + messageBroker);
@@ -58,9 +57,9 @@ public class BlockingScheduledEventManager implements ScheduledEventManager {
         produceEventService.produce(scheduledEvents);
     }
 
-    private Map<MessageBrokerEnum, List<ScheduledEventEntity>> eventsAsMap(List<ScheduledEventEntity> events) {
+    private Map<MessageBrokerEnum, List<ScheduledEvent>> eventsAsMap(List<ScheduledEvent> events) {
         return events.stream()
-                .collect(Collectors.toMap(ScheduledEventEntity::getMessageBroker,
+                .collect(Collectors.toMap(ScheduledEvent::getMessageBroker,
                         List::of,
                         BlockingScheduledEventManager::concatLists));
     }
@@ -72,9 +71,9 @@ public class BlockingScheduledEventManager implements ScheduledEventManager {
                         Function.identity()));
     }
 
-    private List<Long> serials(List<ScheduledEventEntity> orderedEvents) {
+    private List<Long> serials(List<ScheduledEvent> orderedEvents) {
         return orderedEvents.stream()
-                .map(ScheduledEventEntity::getSerialNumber)
+                .map(ScheduledEvent::getSerialNumber)
                 .toList();
     }
 

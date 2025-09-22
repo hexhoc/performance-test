@@ -2,10 +2,12 @@ package com.example.transactionalbox.service;
 
 import com.example.transactionalbox.entity.OutgoingEventEntity;
 import com.example.transactionalbox.entity.ScheduledEventEntity;
+import com.example.transactionalbox.enumeration.MessageBrokerEnum;
 import com.example.transactionalbox.mapper.OutgoingEventMapper;
 import com.example.transactionalbox.mapper.ScheduledEventMapper;
 import com.example.transactionalbox.model.IncomingEvent;
 import com.example.transactionalbox.model.OutgoingEvent;
+import com.example.transactionalbox.model.ScheduledEvent;
 import com.example.transactionalbox.repository.OutgoingEventRepository;
 import com.example.transactionalbox.repository.ScheduledEventRepository;
 import jakarta.transaction.Transactional;
@@ -14,12 +16,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-// TODO: Create bean
 public class ScheduledOutgoingEventService {
     private final ScheduledEventRepository scheduledEventRepository;
     private final OutgoingEventRepository outgoingEventRepository;
@@ -35,8 +37,10 @@ public class ScheduledOutgoingEventService {
         incomingEventThreadLocal.remove();
     }
 
-    public List<ScheduledEventEntity> getScheduledEventsOrderedBySerialNumberAsc(@NonNull Integer sliceSize) {
-        return scheduledEventRepository.findAllOrderBySerialNumberAsc(sliceSize);
+    public List<ScheduledEvent> getScheduledEventsOrderedBySerialNumberAsc(@NonNull Integer sliceSize) {
+        return scheduledEventRepository.findAllOrderBySerialNumberAsc(sliceSize).stream()
+                .map(scheduledEventMapper::toModel)
+                .toList();
     }
 
     @Transactional
@@ -48,6 +52,26 @@ public class ScheduledOutgoingEventService {
     }
 
     @Transactional
+    public OutgoingEvent createEvent(IncomingEvent<?> incomingEvent, String headers, String eventType, String response, String topic, MessageBrokerEnum messageBroker) {
+        var outgoingEventEntity = new OutgoingEventEntity(
+                UUID.randomUUID(),
+                incomingEvent.getId(),
+                incomingEvent.getRequestId().toString(),
+                incomingEvent.getTraceId(),
+                topic,
+                messageBroker,
+                eventType,
+                headers,
+                response,
+                LocalDateTime.now());
+
+        var outgoingEvent = outgoingEventMapper.toModel(outgoingEventRepository.save(outgoingEventEntity));
+        scheduleEvent(outgoingEvent);
+
+        return outgoingEvent;
+    }
+
+    @Transactional
     public void scheduleEvent(OutgoingEvent outgoingEvent) {
         outgoingEventRepository.save(outgoingEventMapper.toEntity(outgoingEvent));
         scheduledEventRepository.save(scheduledEventMapper.toEntity(outgoingEvent));
@@ -56,6 +80,12 @@ public class ScheduledOutgoingEventService {
     @Transactional
     public void scheduleEvents(@NonNull List<OutgoingEvent> outgoingEvents) {
         doScheduleEvents(outgoingEvents);
+    }
+
+    @Transactional
+    public void scheduleEvent(ScheduledEvent event) {
+        var entity = scheduledEventMapper.toEntity(event);
+        scheduledEventRepository.save(entity);
     }
 
     @Transactional

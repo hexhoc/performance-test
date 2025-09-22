@@ -5,7 +5,6 @@ import com.example.transactionalbox.model.OutgoingEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-// TODO: Create bean
 public class OutgoingEventMapper {
 
     public OutgoingEventEntity clone(OutgoingEventEntity source) {
@@ -25,6 +24,21 @@ public class OutgoingEventMapper {
 
     public OutgoingEventEntity toEntity(OutgoingEvent source) {
         return OutgoingEventEntity.builder()
+                .id(source.getId())
+                .incomingEventId(source.getIncomingEventId())
+                .requestId(source.getRequestId())
+                .traceId(source.getTraceId())
+                .destination(source.getDestination())
+                .messageBroker(source.getMessageBroker())
+                .eventType(source.getEventType())
+                .headers(source.getHeaders())
+                .payload(source.getPayload())
+                .createdAt(source.getCreatedAt())
+                .build();
+    }
+
+    public OutgoingEvent toModel(OutgoingEventEntity source) {
+        return OutgoingEvent.builder()
                 .id(source.getId())
                 .incomingEventId(source.getIncomingEventId())
                 .requestId(source.getRequestId())

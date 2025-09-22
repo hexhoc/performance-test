@@ -26,8 +26,8 @@ public class IncomingEventProcessor {
      */
     public <T> void process(@NonNull String request, UUID requestId, String source, String eventType, @NonNull IncomingEventHandler<T> incomingEventHandler) {
         String traceId = TraceUtil.getTraceId();
-
         IncomingEvent<T> incomingEvent = incomingEventService.createEvent(request, traceId, requestId, source, eventType, incomingEventHandler.getPayloadType());
+        setScheduledOutgoingEventServiceThreadLocal(incomingEvent);
         IdempotencyInfo idempotencyInfo = getIdempotencyLevel(incomingEvent);
         try {
             switch(idempotencyInfo.level()) {
@@ -44,6 +44,8 @@ public class IncomingEventProcessor {
             incomingEventService.saveWithSuccess(incomingEvent);
         } catch(Exception e) {
             incomingEventService.saveWithError(incomingEvent, e);
+        } finally {
+            removeScheduledOutgoingEventServiceThreadLocal();
         }
     }
 
@@ -76,5 +78,13 @@ public class IncomingEventProcessor {
 
         return new IdempotencyInfo(null, 0, IdempotencyLevelEnum.NEW);
 
+    }
+
+    private void setScheduledOutgoingEventServiceThreadLocal(IncomingEvent<?> incomingEvent) {
+        scheduledOutgoingEventService.setIncomingEvent(incomingEvent);
+    }
+
+    private void removeScheduledOutgoingEventServiceThreadLocal() {
+        scheduledOutgoingEventService.removeIncomingEvent();
     }
 }

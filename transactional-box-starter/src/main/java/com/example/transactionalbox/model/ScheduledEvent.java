@@ -13,7 +13,7 @@ import java.util.Map;
 public class ScheduledEvent {
     private Long serialNumber;
     private String requestId;
-    private String body;
+    private String payload;
     private String destination;
     private String traceId;
     private MessageBrokerEnum messageBroker;

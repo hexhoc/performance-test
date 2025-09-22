@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-// TODO: Create bean
 public class ProcessScheduledEventScheduler {
     private final ScheduledEventManager scheduledEventManager;
 
